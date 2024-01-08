@@ -27,4 +27,4 @@ jobs:
         with:
           context: dockerfile
           push: true
-          tags: mathijs2002/main:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ Main }}:latest
