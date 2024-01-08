@@ -28,4 +28,4 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops:latest
+          tags:  mathijs2002/devops:latest
