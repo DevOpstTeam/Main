@@ -1,14 +1,21 @@
+import pymysql
+
 menuWidth = 35
 
 mainMenu = ['P2000 bericht', 'Selecteer filters', 'Exit']
 filterMenu = ['Postcode', 'Tijd', 'Prioriteit', 'Exit']
 
-# ============================= #
+dbHost = 'localhost'
+dbUser = 'root'
+dbPass = 'password'
+dbDatabase = 'mydatabase'
+
+# = Interface Methods =================== #
 
 def showMainMenu():
     return showMenu('Hoofdmenu', mainMenu)
 
-def showFilters():
+def showFilterMenu():
     return showMenu('Filters', filterMenu)
 
 def showMenu(title, menuItems):
@@ -38,20 +45,56 @@ def printBar():
     bar = (menuWidth - 2) * '='
     print(f'|{bar}|')
 
-def getLastMessage():
-    # TODO: get latest message from database using the API
-    print('Latest message')
+# = Database Methods ==================== #
 
-# ============================= #
+def connectToDatabase():
+    database = None
+    try:
+        database = pymysql.connect(
+            host=dbHost,
+            user=dbUser,
+            password=dbPass,
+            db=dbDatabase,
+            charset='utf8mb4',
+            cursorclass=pymysql.cursors.DictCursor
+        )
+    except:
+        print(f'Unable to connect to database \'{dbDatabase}\' on \'{dbHost}\'')
+    finally:
+        return database
+    
+def getLastMessage():
+    latestMessage = 'No messages available'
+    connection = connectToDatabase()
+
+    try:
+        cursor = connection.cursor()
+        sql = "SELECT * FROM `users`"
+        cursor.execute(sql)
+
+        rows = cursor().fetchall()
+
+        for row in rows:
+            print(row)
+
+        connection.close()
+    except:
+        return latestMessage
+    else:
+        connection.close()
+        return latestMessage
+
+# = Script ============================== #
 
 menuOption = showMainMenu()
 while menuOption != len(mainMenu):
     if menuOption == 1:
         # P2000 bericht
-        getLastMessage()
+        msg = getLastMessage()
+        print(msg)
     if menuOption == 2:
         # Filter selectie
-        filterOption = showFilters()
+        filterOption = showFilterMenu()
         # TODO: show menu for every filter
         print(f'Gekozen filter: {filterOption}')
 
