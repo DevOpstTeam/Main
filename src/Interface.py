@@ -10,7 +10,7 @@ dbUser = 'root'
 dbPass = 'password'
 dbDatabase = 'mydatabase'
 
-# = Interface Methods =================== #
+# == Interface Methods =================== #
 
 def showMainMenu():
     return showMenu('Hoofdmenu', mainMenu)
@@ -19,6 +19,7 @@ def showFilterMenu():
     return showMenu('Filters', filterMenu)
 
 def showMenu(title, menuItems):
+    print('')   # Print a new line
     printTitle(title)
     for option, currentMenuItem in enumerate(menuItems):
         menuItem = f'| [{option + 1}] {currentMenuItem}'
@@ -32,6 +33,7 @@ def getMenuOption(question, maxMenuOption):
     option = input(question)
     while not option.isnumeric() or (int(option) > maxMenuOption or int(option) < 1):
         option = input(question)
+    print('')   # Print a new line
     return int(option)
 
 def printTitle(title):
@@ -45,7 +47,7 @@ def printBar():
     bar = (menuWidth - 2) * '='
     print(f'|{bar}|')
 
-# = Database Methods ==================== #
+# == Database Methods ==================== #
 
 def connectToDatabase():
     database = None
@@ -63,34 +65,37 @@ def connectToDatabase():
     finally:
         return database
     
-def getLastMessage():
+def getData(sqlQuery):
     latestMessage = 'No messages available'
     connection = connectToDatabase()
 
     try:
         cursor = connection.cursor()
-        sql = "SELECT * FROM `users`"
-        cursor.execute(sql)
+        cursor.execute(sqlQuery)
 
         rows = cursor().fetchall()
 
+        latestMessage = ''
         for row in rows:
-            print(row)
+            latestMessage += row + '\n'
 
-        connection.close()
     except:
-        return latestMessage
-    else:
-        connection.close()
+        print(f'Unable to fetch data using query:\n\t \'{sqlQuery}\'')
+    finally:
+        try:
+            connection.close()
+        except:
+            print('Unable to close connection to database')
         return latestMessage
 
-# = Script ============================== #
+# == Script ============================== #
 
 menuOption = showMainMenu()
 while menuOption != len(mainMenu):
     if menuOption == 1:
         # P2000 bericht
-        msg = getLastMessage()
+        query = "SELECT * FROM `users`"
+        msg = getData(query)
         print(msg)
     if menuOption == 2:
         # Filter selectie
