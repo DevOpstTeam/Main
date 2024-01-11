@@ -29,8 +29,9 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devops:latest
-    
 
+
+    
   push:
     runs-on: ubuntu-latest
     steps:
@@ -50,11 +51,9 @@ jobs:
         name: login
         run: doctl registry login
       -
-        name: tag docker image digitalocean
-        run: docker tag latest registry.digitalocean.com/project-devops/latest
-      -
+     
         name: push docker image digitalocean
-        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops
+        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:latest
 
 
 
