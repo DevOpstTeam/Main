@@ -28,7 +28,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops:$(echo $GITHUB_SHA | head -c7) 
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops:latest
 
 
     
@@ -53,7 +53,7 @@ jobs:
       -
      
         name: push docker image digitalocean
-        run: docker push docker push ${{ secrets.DOCKER_USERNAME }}/python-example:$(echo $GITHUB_SHA | head -c7)
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/devops:latest
 
 
 
