@@ -51,11 +51,13 @@ jobs:
         name: login
         run: doctl registry login
       -
+        name: docker tag
+        run: docker tag mathijs2002/devops:latest registry.digitalocean.com/project-devops
+      -
      
         name: push docker image digitalocean
-        run: docker pull mathijs2002/devops:latest
-        run: docker tag mathijs2002/devops:latest registry.digitalocean.com/project-devops/mathijs2002/devops:latest
-        run: docker push mathijs2002/devops:latest registry.digitalocean.com/project-devops/mathijs2002/devops:latest
+        run: docker push registry.digitalocean.com/project-devops
+        
 
 
 
