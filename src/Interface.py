@@ -1,14 +1,12 @@
 import pymysql
+import json
 
 menuWidth = 35
 
 mainMenu = ['P2000 bericht', 'Selecteer filters', 'Exit']
 filterMenu = ['Postcode', 'Tijd', 'Prioriteit', 'Exit']
 
-dbHost = 'localhost'
-dbUser = 'root'
-dbPass = 'password'
-dbDatabase = 'mydatabase'
+databaseConfig = json.load(open('src/dbConfig.json'))
 
 # == Interface Methods =================== #
 
@@ -53,15 +51,17 @@ def connectToDatabase():
     database = None
     try:
         database = pymysql.connect(
-            host=dbHost,
-            user=dbUser,
-            password=dbPass,
-            db=dbDatabase,
+            host=databaseConfig['host'],
+            user=databaseConfig['username'],
+            password=databaseConfig['password'],
+            db=databaseConfig['database'],
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
     except:
-        print(f'Unable to connect to database \'{dbDatabase}\' on \'{dbHost}\'')
+        db = databaseConfig['database']
+        host = databaseConfig['host']
+        print(f'Unable to connect to database \'{db}\' on \'{host}\'')
     finally:
         return database
     
