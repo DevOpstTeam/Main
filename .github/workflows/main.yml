@@ -51,7 +51,7 @@ jobs:
         run: doctl registry login
       -
         name: tag docker image digitalocean
-        run: docker tag mathijs2002/devops registry.digitalocean.com/project-devops/mathijs2002/devops
+        run: docker tag latest registry.digitalocean.com/project-devops/latest
       -
         name: push docker image digitalocean
         run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops
