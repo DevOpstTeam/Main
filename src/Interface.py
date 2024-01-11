@@ -1,24 +1,39 @@
 import pymysql
 import json
 
-menuWidth = 35
-
 mainMenu = ['P2000 bericht', 'Selecteer filters', 'Exit']
 filterMenu = ['Postcode', 'Tijd', 'Prioriteit', 'Exit']
 
-databaseConfig = json.load(open('src/dbConfig.json'))
+config = json.load(open('src/Config.json'))
+databaseConfig = config["dbConfig"]
+
+menuWidth = config["consoleMenuWidth"]
 
 # == Interface Methods =================== #
 
 def showMainMenu():
     return showMenu('Hoofdmenu', mainMenu)
 
-def showFilterMenu():
-    return showMenu('Filters', filterMenu)
+def showFilterMenu(filterOption = 0):
+    if filterOption == 0:
+        return showMenu('Filters', filterMenu)
+    elif filterOption == 1:
+        postCode = showFilterPostcode()
+        # TODO Set filter option to this postcode
+        print(postCode)
+    elif filterOption == 2:
+        timeStart, timeEnd = showFilterTime()
+        # TODO Set filter option to this timeframe
+        print(timeStart, timeEnd)
+    elif filterOption == 3:
+        priority = showFilterPriority()
+        # TODO Set filter option to this priority
+        print(priority)
 
 def showMenu(title, menuItems):
-    print('')   # Print a new line
+    print('')   # Start with a new line
     printTitle(title)
+    # Print all the menu items
     for option, currentMenuItem in enumerate(menuItems):
         menuItem = f'| [{option + 1}] {currentMenuItem}'
         tail = (menuWidth - len(menuItem) - 1) * ' '
@@ -31,7 +46,7 @@ def getMenuOption(question, maxMenuOption):
     option = input(question)
     while not option.isnumeric() or (int(option) > maxMenuOption or int(option) < 1):
         option = input(question)
-    print('')   # Print a new line
+    print('')   # End with a new line
     return int(option)
 
 def printTitle(title):
@@ -44,6 +59,32 @@ def printTitle(title):
 def printBar():
     bar = (menuWidth - 2) * '='
     print(f'|{bar}|')
+
+# Filter menu option postcode
+def showFilterPostcode():
+    printTitle('Postcode')
+    postCode = input('| Selecteer een postcode [0000XX]: ')
+    while not postCode[:4].isnumeric() or not postCode[4:].isalnum():
+        postCode = input('| Selecteer een postcode [0000XX]: ')
+    printBar()
+    return postCode
+
+# Filter menu option priority
+def showFilterPriority():
+    printTitle('Prioriteit')
+    priority = int(input('| Selecteer een prioriteit [1-3]: '))
+    while priority < 1 or priority > 3:
+        priority = int(input('| Selecteer een prioriteit [1-3]: '))
+    printBar()
+    return priority
+
+# Filter menu option time
+def showFilterTime():
+    printTitle('Tijd')
+    startTime = input('| Selecteer een start datum []: ')
+    endTime = input('| Selecteer een eind datum []: ')
+    printBar()
+    return startTime, endTime
 
 # == Database Methods ==================== #
 
@@ -100,7 +141,7 @@ while menuOption != len(mainMenu):
     if menuOption == 2:
         # Filter selectie
         filterOption = showFilterMenu()
-        # TODO: show menu for every filter
-        print(f'Gekozen filter: {filterOption}')
+        if filterOption != len(filterMenu):
+            showFilterMenu(filterOption)
 
     menuOption = showMainMenu()
