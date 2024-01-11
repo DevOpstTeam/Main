@@ -1,4 +1,4 @@
-name: ci
+name: cicd
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          epository: mathijs2002/devops:latest
+          repository: mathijs2002/devops
           tag_with_ref: true
           tag_with_sha: true
 
@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-       name: checkout files
-       uses: actions/checkout@v2
+        name: checkout files
+        uses: actions/checkout@v2
       
       -
         name: get tag name
@@ -39,13 +39,14 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       -
         name: login
-        uses: doctl registry login
+        run: doctl registry login
       -
         name: tag docker image digitalocean
-        uses: docker tag mathijs2002/devops registry.digitalocean.com/project-devops/mathijs2002/devops
+        run: docker tag mathijs2002/devops registry.digitalocean.com/project-devops/mathijs2002/devops
       -
         name: push docker image digitalocean
-        uses: docker push registry.digitalocean.com/project-devops/mathijs2002/devops
+        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops
+
 
 
     
