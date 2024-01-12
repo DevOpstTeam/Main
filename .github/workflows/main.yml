@@ -29,7 +29,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.date.outputs.date }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops:latest
 
   push:
     runs-on: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.date.outputs.date }}
       -
         name: Docker tag
-        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.date.outputs.date }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ steps.date.outputs.date }}
+        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:latest registry.digitalocean.com/project-devops/mathijs2002/devops:latest
       -
         name: Push Docker image to DigitalOcean
         run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:latest
