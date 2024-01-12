@@ -48,10 +48,8 @@ jobs:
         run: doctl registry login
       - 
         name: Remove old images from Container Registry
-        uses: ripplr-io/docr-image-remove@v1
-        with:
-          image_repository: mathijs2002/devops
-          buffer_size: 3
+        run: doctl registry garbage-collection start [--include-untagged-manifests]  registry.digitalocean.com/project-devops
+
           
           
       -
