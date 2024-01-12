@@ -46,13 +46,11 @@ jobs:
       -
         name: Login to DigitalOcean Container Registry
         run: doctl registry login
-
-
       - 
         name: Remove old images from Container Registry
         uses: ripplr-io/docr-image-remove@v1
         with:
-          image_repository: project-devops
+          image_repository: registry.digitalocean.com/project-devops
           
           
       -
