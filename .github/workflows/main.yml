@@ -47,6 +47,18 @@ jobs:
         name: Login to DigitalOcean Container Registry
         run: doctl registry login
 
+
+      - 
+        name: List containers in the registry
+        run: doctl registry list registry.digitalocean.com/project-devops
+        id: list
+
+      - 
+        name: Remove containers from the registry
+        run: |
+          for container in $(echo "${{ steps.list.outputs.repositories }}" | tr -d '[:space:]');
+          do doctl registry repository delete my-registry/${container} --force done
+
       -
         name: Pull Docker image from Docker Hub
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:latest
