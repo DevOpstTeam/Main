@@ -49,7 +49,7 @@ jobs:
 
       -
         name: Pull Docker image from Docker Hub
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.date.outputs.date }}
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:latest
       -
         name: Docker tag
         run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:latest registry.digitalocean.com/project-devops/mathijs2002/devops:latest
