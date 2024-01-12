@@ -4,4 +4,4 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "Welkom bij mijn eerste FastAPI API!"}
+    return {"message": "Welkom bij mijn eerste FastAPI API! cdcd werkt half natuurlijk"}
