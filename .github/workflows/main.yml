@@ -52,8 +52,8 @@ jobs:
         name: Remove old images from Container Registry
         uses: ripplr-io/docr-image-remove@v1
         with:
-          image_repository: image-repository # required
-          buffer_size: 10
+          image_repository: registry.digitalocean.com/project-devops
+          
           
       -
         name: Pull Docker image from Docker Hub
