@@ -52,7 +52,7 @@ jobs:
         name: Remove old images from Container Registry
         uses: ripplr-io/docr-image-remove@v1
         with:
-          image_repository: registry.digitalocean.com/project-devops
+          image_repository: project-devops
           
           
       -
