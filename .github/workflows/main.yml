@@ -48,7 +48,7 @@ jobs:
         run: doctl registry login
       - 
         name: Remove old images from Container Registry
-        run: doctl registry garbage-collection start [--include-untagged-manifests]  registry.digitalocean.com/project-devops
+        run: doctl registry garbage-collection start --include-untagged-manifests  project-devops
 
           
           
