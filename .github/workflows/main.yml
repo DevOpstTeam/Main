@@ -49,18 +49,12 @@ jobs:
 
 
       - 
-        name: List containers in the registry
-        run: doctl registry list registry.digitalocean.com/project-devops
-        id: list
-
-      - 
-        name: Remove containers from the registry
-        run: |
-          for container in $(echo "${{ steps.list.outputs.repositories }}" | tr -d '[:space:]'); do
-            doctl registry repository delete registry.digitalocean.com/project-devops/${container} --force
-          done
-
-
+        name: Remove old images from Container Registry
+        uses: ripplr-io/docr-image-remove@v1
+        with:
+          image_repository: image-repository # required
+          buffer_size: 10
+          
       -
         name: Pull Docker image from Docker Hub
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:latest
