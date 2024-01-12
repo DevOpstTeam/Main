@@ -51,6 +51,7 @@ jobs:
         uses: ripplr-io/docr-image-remove@v1
         with:
           image_repository: mathijs2002/devops
+          buffer_size: 3
           
           
       -
