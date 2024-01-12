@@ -56,8 +56,10 @@ jobs:
       - 
         name: Remove containers from the registry
         run: |
-          for container in $(echo "${{ steps.list.outputs.repositories }}" | tr -d '[:space:]');
-          do doctl registry repository delete registry.digitalocean.com/project-devops/${container} --force done
+          for container in $(echo "${{ steps.list.outputs.repositories }}" | tr -d '[:space:]'); do
+            doctl registry repository delete registry.digitalocean.com/project-devops/${container} --force
+          done
+
 
       -
         name: Pull Docker image from Docker Hub
