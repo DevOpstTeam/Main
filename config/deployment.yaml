@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-deploy
+  labels:
+    app: python-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-deploy
+  template:
+    metadata:
+      labels:
+        app: python-deploy
+    spec:
+      containers:
+      - name: python-deploy
+        image: registry.digitalocean.com/project-devops/mathijs2002/devops:latest
+        ports:
+        - containerPort: 8000
