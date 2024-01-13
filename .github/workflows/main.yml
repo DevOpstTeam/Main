@@ -68,11 +68,22 @@ jobs:
     needs: push
     steps:
       -
-        name: connect to cluster
-        run: kubectl --kubeconfig=.github/workflow/python-api-kubeconfig.yaml get nodes
+        name: Checkout files
+        uses: actions/checkout@v2
       -
-        name: deploy app
-        run: kubectl create deployment test --image=registry.digitalocean.com/project-devops/mathijs2002/devops:latest/test
+        name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      -
+        name: Login to DigitalOcean Container Registry
+        run: doctl registry login
+      - 
+        name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 python-api
+      -
+        name: Deploy to DigitalOcean Kubernetes
+        run: kubectl apply -f Main/config/deployment.yml
 
 
       
