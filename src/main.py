@@ -4,4 +4,4 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"cicd werk half natuurlijk"}
+    return {"cicd werk half natuurlijk!!"}
