@@ -87,6 +87,7 @@ jobs:
       -
         name: Deploy load balancer
         run: kubectl apply -f ${GITHUB_WORKSPACE}/config/loadbalanc.yaml
+        
 
     
 
