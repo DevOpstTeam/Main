@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 # copy the src to the folder
 
-EXPOSE 8000
+EXPOSE 8080
 
 
 
