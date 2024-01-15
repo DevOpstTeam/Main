@@ -4,4 +4,4 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"NOVI devops"}
+    return {"NOVI CICD werkt!!"}
