@@ -1,8 +1,5 @@
 FROM python:3.10-slim
 
-# exit root
-USER 1000:1000
-
 # set the working directory
 WORKDIR /app
 
@@ -12,6 +9,8 @@ COPY . /app
 # install dependencies
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
+# exit root
+USER 1000:1000
 
 # expose port
 EXPOSE 8080
