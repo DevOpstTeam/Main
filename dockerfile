@@ -10,7 +10,7 @@ COPY . /app
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 # exit root
-USER <UID>[:<GID>]
+USER 1000:1000
 
 # expose port
 EXPOSE 8080
