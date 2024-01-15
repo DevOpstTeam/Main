@@ -1,8 +1,7 @@
 FROM python:3.10-slim
 
 # exit root
-RUN net user /add api
-USER api
+USER <UID>[:<GID>]
 
 # set the working directory
 WORKDIR /app
