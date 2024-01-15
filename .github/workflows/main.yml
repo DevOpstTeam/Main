@@ -80,13 +80,13 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 python-api
       -
         name: Deploy to DigitalOcean Kubernetes
-        run: kubectl apply -f ${GITHUB_WORKSPACE}/config/deployment.yaml
+        run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/deployment.yaml
       -
         name: Verify deployment
         run: kubectl rollout status deployment/python-deploy
       -
         name: Deploy load balancer
-        run: kubectl apply -f ${GITHUB_WORKSPACE}/config/loadbalanc.yaml
+        run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/loadbalanc.yaml
         
 
     
