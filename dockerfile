@@ -4,6 +4,7 @@ FROM python:3.10-slim
 WORKDIR /app
 # install dependencies
 COPY . /app
+run pip install --upgrade pip
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 # copy the src to the folder
