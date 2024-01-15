@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . /app
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-# copy the src to the folder
+# expose port
 
 EXPOSE 8080
 
