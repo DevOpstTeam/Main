@@ -10,5 +10,5 @@ def read_root():
 @app.get("/db")
 def get_data():
     query = "SELECT * FROM meldingen;"
-    database.getData(query)
-    return{""}
+    data = database.getData(query)
+    return{data[0]}
