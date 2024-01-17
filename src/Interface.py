@@ -1,12 +1,10 @@
-import pymysql
 import simplejson as json
+import database
 
 mainMenu = ['P2000 bericht', 'Selecteer filters', 'Exit']
 filterMenu = ['Postcode', 'Tijd', 'Prioriteit', 'Exit']
 
-config = json.load(open('.config/interfaceConfig.json'))
-databaseConfig = config["dbConfig"]
-
+config = json.load(open(".config/interfaceConfig.json"))
 menuWidth = config["consoleMenuWidth"]
 
 # == Interface Methods =================== #
@@ -86,44 +84,6 @@ def showFilterTime():
     printBar()
     return startTime, endTime
 
-# == Database Methods ==================== #
-
-def connectToDatabase():
-    database = None
-    try:
-        database = pymysql.connect(
-            host=databaseConfig['host'],
-            user=databaseConfig['username'],
-            port=databaseConfig['port'],
-            password=databaseConfig['password'],
-            db=databaseConfig['database'],
-            charset='utf8mb4',
-            cursorclass=pymysql.cursors.DictCursor
-        )
-    except:
-        db = databaseConfig['database']
-        host = databaseConfig['host']
-        print(f'Unable to connect to database \'{db}\' on \'{host}\'')
-    finally:
-        return database
-    
-def getData(sqlQuery):
-    result = None
-    connection = connectToDatabase()
-
-    try:
-        cursor = connection.cursor()
-        cursor.execute(sqlQuery)
-        result = cursor.fetchall()
-    except:
-        print(f'Unable to fetch data using query:\n\t \'{sqlQuery}\'')
-    finally:
-        try:
-            connection.close()
-        except:
-            print('Unable to close connection to database')
-        return result
-
 # == Script ============================== #
 
 menuOption = showMainMenu()
@@ -131,7 +91,7 @@ while menuOption != len(mainMenu):
     if menuOption == 1:
         # P2000 bericht
         query = "SELECT * FROM meldingen;"
-        dataMsg = getData(query)
+        dataMsg = database.getData(query)
 
         for row in dataMsg:
             print(row)

@@ -1,10 +1,3 @@
 {
-    "dbConfig": {
-        "host": "devops-db-do-user-15578676-0.c.db.ondigitalocean.com",
-        "database": "p2000",
-        "port": 25060,
-        "username": "user",
-        "password": "pass"
-    },
     "consoleMenuWidth": 35
 }
