@@ -1,9 +1,10 @@
 {
     "dbConfig": {
-        "host": "localhost",
-        "database": "myDatabase",
-        "username": "root",
-        "password": "password"
+        "host": "devops-db-do-user-15578676-0.c.db.ondigitalocean.com",
+        "database": "p2000",
+        "username": "doadmin",
+        "password": "AVNS_eRRBpMvhvkD2dw2ZpcG",
+        "port": "25060"
     },
     "consoleMenuWidth": 35
 }
