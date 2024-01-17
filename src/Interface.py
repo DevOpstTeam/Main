@@ -1,10 +1,10 @@
-import simplejson as json
+import yaml
 import database
 
 mainMenu = ['P2000 bericht', 'Selecteer filters', 'Exit']
 filterMenu = ['Postcode', 'Tijd', 'Prioriteit', 'Exit']
 
-config = json.load(open(".config/interfaceConfig.json"))
+config = yaml.safe_load(open(".config/interface.yaml"))
 menuWidth = config["consoleMenuWidth"]
 
 # == Interface Methods =================== #
