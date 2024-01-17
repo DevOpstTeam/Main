@@ -1,7 +1,6 @@
 import pymysql
 import yaml
 
-# databaseConfig = json.load(open('.config/databaseConfig.json'))
 databaseConfig = yaml.safe_load(open(".config/dbConfig.yaml"))
 
 def connectToDatabase():
