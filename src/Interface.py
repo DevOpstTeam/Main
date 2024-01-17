@@ -4,7 +4,7 @@ import simplejson as json
 mainMenu = ['P2000 bericht', 'Selecteer filters', 'Exit']
 filterMenu = ['Postcode', 'Tijd', 'Prioriteit', 'Exit']
 
-config = json.load(open('config/interfaceConfig.json'))
+config = json.load(open('.config/interfaceConfig.json'))
 databaseConfig = config["dbConfig"]
 
 menuWidth = config["consoleMenuWidth"]
