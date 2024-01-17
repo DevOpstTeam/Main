@@ -94,6 +94,7 @@ def connectToDatabase():
         database = pymysql.connect(
             host=databaseConfig['host'],
             user=databaseConfig['username'],
+            port=databaseConfig['port'],
             password=databaseConfig['password'],
             db=databaseConfig['database'],
             charset='utf8mb4',
@@ -107,19 +108,13 @@ def connectToDatabase():
         return database
     
 def getData(sqlQuery):
-    latestMessage = 'No messages available'
+    result = None
     connection = connectToDatabase()
 
     try:
         cursor = connection.cursor()
         cursor.execute(sqlQuery)
-
-        rows = cursor().fetchall()
-
-        latestMessage = ''
-        for row in rows:
-            latestMessage += row + '\n'
-
+        result = cursor.fetchall()
     except:
         print(f'Unable to fetch data using query:\n\t \'{sqlQuery}\'')
     finally:
@@ -127,7 +122,7 @@ def getData(sqlQuery):
             connection.close()
         except:
             print('Unable to close connection to database')
-        return latestMessage
+        return result
 
 # == Script ============================== #
 
@@ -135,9 +130,11 @@ menuOption = showMainMenu()
 while menuOption != len(mainMenu):
     if menuOption == 1:
         # P2000 bericht
-        query = "SELECT * FROM `users`"
-        msg = getData(query)
-        print(msg)
+        query = "SELECT * FROM meldingen;"
+        dataMsg = getData(query)
+
+        for row in dataMsg:
+            print(row)
     if menuOption == 2:
         # Filter selectie
         filterOption = showFilterMenu()
