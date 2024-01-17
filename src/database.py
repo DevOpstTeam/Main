@@ -1,17 +1,18 @@
-import simplejson as json
 import pymysql
+import yaml
 
-databaseConfig = json.load(open('.config/databaseConfig.json'))
+# databaseConfig = json.load(open('.config/databaseConfig.json'))
+databaseConfig = yaml.safe_load(open(".config/dbConfig.yaml"))
 
 def connectToDatabase():
     database = None
     try:
         database = pymysql.connect(
             host=databaseConfig['host'],
-            user=databaseConfig['username'],
             port=databaseConfig['port'],
+            db=databaseConfig['dbName'],
+            user=databaseConfig['username'],
             password=databaseConfig['password'],
-            db=databaseConfig['database'],
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
