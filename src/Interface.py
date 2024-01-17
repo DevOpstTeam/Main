@@ -1,12 +1,10 @@
-import pymysql
-import simplejson as json
+import yaml
+import database
 
 mainMenu = ['P2000 bericht', 'Selecteer filters', 'Exit']
 filterMenu = ['Postcode', 'Tijd', 'Prioriteit', 'Exit']
 
-config = json.load(open('config/interfaceConfig.json'))
-databaseConfig = config["dbConfig"]
-
+config = yaml.safe_load(open(".config/interface.yaml"))
 menuWidth = config["consoleMenuWidth"]
 
 # == Interface Methods =================== #
@@ -86,58 +84,17 @@ def showFilterTime():
     printBar()
     return startTime, endTime
 
-# == Database Methods ==================== #
-
-def connectToDatabase():
-    database = None
-    try:
-        database = pymysql.connect(
-            host=databaseConfig['host'],
-            user=databaseConfig['username'],
-            password=databaseConfig['password'],
-            db=databaseConfig['database'],
-            charset='utf8mb4',
-            cursorclass=pymysql.cursors.DictCursor
-        )
-    except:
-        db = databaseConfig['database']
-        host = databaseConfig['host']
-        print(f'Unable to connect to database \'{db}\' on \'{host}\'')
-    finally:
-        return database
-    
-def getData(sqlQuery):
-    latestMessage = 'No messages available'
-    connection = connectToDatabase()
-
-    try:
-        cursor = connection.cursor()
-        cursor.execute(sqlQuery)
-
-        rows = cursor().fetchall()
-
-        latestMessage = ''
-        for row in rows:
-            latestMessage += row + '\n'
-
-    except:
-        print(f'Unable to fetch data using query:\n\t \'{sqlQuery}\'')
-    finally:
-        try:
-            connection.close()
-        except:
-            print('Unable to close connection to database')
-        return latestMessage
-
 # == Script ============================== #
 
 menuOption = showMainMenu()
 while menuOption != len(mainMenu):
     if menuOption == 1:
         # P2000 bericht
-        query = "SELECT * FROM `users`"
-        msg = getData(query)
-        print(msg)
+        query = "SELECT * FROM meldingen;"
+        dataMsg = database.getData(query)
+
+        for row in dataMsg:
+            print(row)
     if menuOption == 2:
         # Filter selectie
         filterOption = showFilterMenu()
