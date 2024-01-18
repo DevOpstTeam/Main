@@ -12,4 +12,9 @@ def read_root():
 def get_data():
     query = "SELECT * FROM meldingen;"
     data = database.getData(query)
+<<<<<<< HEAD
     return str({data[0]})
+=======
+    msg = f'\tMESSAGE\n{data[0]["id"]}\n{data[0]["ABP"]}\n{data[0]["Postcode"]}'
+    return{msg}
+>>>>>>> origin/dev
