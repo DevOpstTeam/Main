@@ -20,16 +20,16 @@ spec:
         ports:
         - containerPort: 8080
         env:
-       - name: MYSQL_USER
-        value: "doadmin"
-      - name: MYSQL_HOST
-        value: ${{ secrets.HOST_DB }}
-      - name: MYSQL_PORT
-        value: "25060"
-      - name: MYSQL_DATABASE
-        value: "p2000"
-      - name: MYSQL_PASSWORD
-        value: ${{ secrets.DB_PASSWORD }}
+        - name: MYSQL_USER
+          value: "doadmin"
+        - name: MYSQL_HOST
+          value: ${{ secrets.HOST_DB }}
+        - name: MYSQL_PORT
+          value: "25060"
+        - name: MYSQL_DATABASE
+          value: "p2000"
+        - name: MYSQL_PASSWORD
+          value: ${{ secrets.DB_PASSWORD }}
 
 
       
