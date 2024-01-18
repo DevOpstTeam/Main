@@ -13,8 +13,8 @@ def connectToDatabase():
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
-    except:
-        print(f'Unable to connect to database')
+    except pymysql.MySQLError as e:
+        print(f'Unable to connect to database{e}')
     finally:
         return database
     
