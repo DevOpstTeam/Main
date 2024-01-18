@@ -18,5 +18,5 @@ def get_data():
 
 @app.get("/dbtest")
 def test_db():
-    return{dict(os.environ)}
+    return str({dict(os.environ)})
 
