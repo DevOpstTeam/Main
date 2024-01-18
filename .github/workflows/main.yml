@@ -79,6 +79,9 @@ jobs:
         name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 python-api
       -
+        name: delete old deployment
+        run: kubectl delete deployment python-deploy
+      -
         name: Deploy to DigitalOcean Kubernetes
         run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/deployment.yaml
       -
@@ -87,6 +90,9 @@ jobs:
       -
         name: Deploy load balancer
         run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/loadbalanc.yaml
+      -
+        name: Deploy DB-service
+        run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/dbconnect.yaml
         
 
     
