@@ -16,4 +16,4 @@ USER 1000:1000
 EXPOSE 8080
 
 # start the server
-ENTRYPOINT ["uvicorn", "src.main:app", "--host", "0.0.0.0" , "--port", "8080", "--reload"]
+ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0" , "--port", "8080", "--reload"]
