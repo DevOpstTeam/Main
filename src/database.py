@@ -36,3 +36,23 @@ def getData(sqlQuery):
         except:
             print('Unable to close connection to database')
         return result
+    
+def insertData(abp, priority, date, time, postcode):
+    connection = connectToDatabase()
+    
+    try:
+        cursor = connection.cursor()
+
+        sql = f'INSERT INTO meldingen (ABP, Prioriteit, Datum, Tijd, Postcode) VALUES (%s, %s, %s, %s, %s);'
+        val = (abp, priority, date, time, postcode)
+        cursor.execute(sql, val)
+
+        connection.commit()
+        print('Record inserted')
+    except:
+        print(f'Unable to insert data into meldingen: \n\t{abp}\n\t{priority}\n\t{date}\n\t{time}\n\t{postcode}')
+    finally:
+        try:
+            connection.close()
+        except:
+            print("Unable to close connection to database")
