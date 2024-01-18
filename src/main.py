@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import database
+#import database
 
 app = FastAPI()
 
