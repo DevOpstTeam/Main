@@ -1,18 +1,12 @@
-apiVersion: databases.digitalocean.com/v1alpha1
-kind: DatabaseClusterReference
+apiVersion: v1
+kind: Service
 metadata:
-  name: devops-db
-  namespace: databases.digitalocean.com/devops-db
-
-env:
-  - name: MYSQL_HOST
-    value: ${{ secrets.HOST_DB }}  # Vul de host in met de geheime waarde
-  - name: MYSQL_PORT
-    value: "25060"  # Vul de poort in
-  - name: MYSQL_DATABASE
-    value: "p2000"  # Vul de database in
-  - name: MYSQL_USER
-    value: "doadmin"  # Vul de gebruikersnaam in
-  - name: MYSQL_PASSWORD
-    value: ${{ secrets.DB_PASSWORD }} 
+  name: mysql-service
+spec:
+  selector:
+    app: devops-db
+  ports:
+  - protocol: TCP
+    port: 25060
+    targetPort: 25060
 
