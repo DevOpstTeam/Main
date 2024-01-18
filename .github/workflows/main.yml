@@ -92,7 +92,7 @@ jobs:
         run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/loadbalanc.yaml
       -
         name: Deploy DB-service
-        run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/dbconnect.yaml
+        run: doctl databases get <database-id> [flags]
         
 
     

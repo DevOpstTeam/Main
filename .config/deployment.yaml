@@ -19,5 +19,6 @@ spec:
         image: registry.digitalocean.com/project-devops/mathijs2002/devops:latest
         ports:
         - containerPort: 8080
+        - containerport: 25060
 
 

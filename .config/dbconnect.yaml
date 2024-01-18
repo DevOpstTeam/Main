@@ -1,49 +1,4 @@
-apiVersion: databases.digitalocean.com/v1alpha1
-kind: DatabaseClusterReference
-metadata:
-  name: devops-db
-spec:
-  uuid: 89658290-4c9d-43a5-8006-de9b95c7f006
 
-apiVersion: databases.digitalocean.com/v1alpha1
-kind: DatabaseUserReference
-metadata:
-  name: doadmin
-spec:
-  databaseCluster:
-    apiGroup: databases.digitalocean.com
-    kind: DatabaseClusterReference
-    name: devops-db
-  username: doadmin
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: database-deploy
-  labels:
-    app: database-deploy
-spec:
-  template:
-    spec:
-      containers:
-      - name: 
-        image: 
-        env:
-        - name: MYSQL_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: db-ref-private-connection
-              key: private-devops-db-do-user-15578676-0.c.db.ondigitalocean.com
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: sample-user-credentials
-              key: doadmin
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: sample-user-credentials
-              key: ${{ secrets.DB_PASSWORD }}
 
 
 
