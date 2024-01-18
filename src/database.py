@@ -26,8 +26,8 @@ def getData(sqlQuery):
         cursor = connection.cursor()
         cursor.execute(sqlQuery)
         result = cursor.fetchall()
-    except:
-        print(f'Unable to fetch data using query:\n\t \'{sqlQuery}\'')
+    except Exception as e:
+        print(f'Unable to fetch data using query:\n\t \'{sqlQuery}\' {e}')
     finally:
         try:
             connection.close()
