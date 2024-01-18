@@ -1,32 +1,17 @@
 apiVersion: databases.digitalocean.com/v1alpha1
 kind: DatabaseClusterReference
 metadata:
-  name: p2000-db
+  name: devops-db
 
 env:
   - name: MYSQL_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: guestbook-db-private-connection
-        key: ${{ secrets.HOST_DB }}  # De hostnaam van de database, komt uit de ConfigMap
+    value: ${{ secrets.HOST_DB }}  # Vul de host in met de geheime waarde
   - name: MYSQL_PORT
-    valueFrom:
-      configMapKeyRef:
-        name: guestbook-db-private-connection
-        key: 25060  # De poort van de database, komt uit de ConfigMap
+    value: "25060"  # Vul de poort in
   - name: MYSQL_DATABASE
-    valueFrom:
-      configMapKeyRef:
-        name: guestbook-db-private-connection
-        key: p2000 # De naam van de database, komt uit de ConfigMap
+    value: "p2000"  # Vul de database in
   - name: MYSQL_USER
-    valueFrom:
-      secretKeyRef:
-        name: guestbook-db-user-credentials
-        key: doadmin  # De gebruikersnaam voor de database, komt uit de Secret
+    value: "doadmin"  # Vul de gebruikersnaam in
   - name: MYSQL_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: guestbook-db-user-credentials
-        key: ${{ secrets.DB_PASSWORD }}  # Het wachtwoord voor de database, komt uit de Secret
+    value: ${{ secrets.DB_PASSWORD }} 
 
