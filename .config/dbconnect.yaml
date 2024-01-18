@@ -1,7 +1,8 @@
-apiVersion: databases.digitalocean.com/devops-db
+apiVersion: databases.digitalocean.com/v1alpha1
 kind: DatabaseClusterReference
 metadata:
   name: devops-db
+  namespace: databases.digitalocean.com/devops-db
 
 env:
   - name: MYSQL_HOST
