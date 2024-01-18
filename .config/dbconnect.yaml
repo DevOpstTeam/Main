@@ -1,4 +1,4 @@
-apiVersion: databases.digitalocean.com/v1alpha1
+apiVersion: databases.digitalocean.com/devops-db
 kind: DatabaseClusterReference
 metadata:
   name: devops-db
