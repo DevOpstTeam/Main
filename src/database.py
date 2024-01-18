@@ -40,7 +40,6 @@ def getData(sqlQuery):
         return result
     
 def insertData(abp, priority, date, time, postcode):
-    # ID increments automatically
     connection = connectToDatabase()
     
     try:
@@ -53,7 +52,7 @@ def insertData(abp, priority, date, time, postcode):
         connection.commit()
         print(f'{cursor.rowcount} records inserted')
     except:
-        print(f'Unable to insert data into meldingen \n\t{abp}\n\t{priority}\n\t{date}\n\t{time}\n\t{postcode}')
+        print(f'Unable to insert data into meldingen: \n\t{abp}\n\t{priority}\n\t{date}\n\t{time}\n\t{postcode}')
     finally:
         try:
             connection.close()
