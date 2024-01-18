@@ -6,7 +6,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"NOVI CICD werkt!"}
+    return {"NOVI CICD werkt!!"}
 
 
 @app.get("/db")
