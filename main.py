@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import database
+import src.database as database
 
 app = FastAPI()
 
@@ -11,4 +11,5 @@ def read_root():
 def get_data():
     query = "SELECT * FROM meldingen;"
     data = database.getData(query)
-    return{data[0]}
+    msg = f'\tMESSAGE\n{data[0].id}\n{data[0].ABP}\n{data[0].Postcode}'
+    return{msg}
