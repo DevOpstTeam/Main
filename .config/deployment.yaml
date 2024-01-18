@@ -23,13 +23,13 @@ spec:
         - name: MYSQL_USER
           value: "doadmin"
         - name: MYSQL_HOST
-          value: "private-db-ro-p2000-ams3-85593-do-user-15578676-0.c.db.ondigitalocean.com"
+          value: "placeholder_host"
         - name: MYSQL_PORT
           value: "25060"
         - name: MYSQL_DATABASE
           value: "p2000"
         - name: MYSQL_PASSWORD
-          value: "AVNS_JG2aikdfBEE9b4NdamF"
+          value: "placeholder_passwd"
 
 
       
