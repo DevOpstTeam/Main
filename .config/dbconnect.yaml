@@ -19,10 +19,10 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
-  namespace: app-namespace
+  name: devops-db
+  namespace: devops-db
   labels:
-    app: my-app
+    app: devops-db
 spec:
   template:
     spec:
