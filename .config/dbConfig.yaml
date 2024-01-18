@@ -1,5 +1,0 @@
-host: ${{ secrets.HOST_DB }}
-port: 25060
-dbName: p2000
-username: doadmin
-password: ${{ secrets.DB_PASSWORD }}

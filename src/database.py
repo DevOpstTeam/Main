@@ -1,17 +1,16 @@
 import pymysql
-import yaml
+import os
 
-databaseConfig = yaml.safe_load(open(".config/dbConfig.yaml"))
 
 def connectToDatabase():
     database = None
     try:
         database = pymysql.connect(
-            host=databaseConfig['host'],
-            port=databaseConfig['port'],
-            db=databaseConfig['dbName'],
-            user=databaseConfig['username'],
-            password=databaseConfig['password'],
+            host=os.environ.get('MYSQL_HOST'),
+            port=os.environ.get('MYSQL_PORT'),
+            db=os.environ.get('MYSQL_DB'),
+            user=os.environ.get('MYSQL_USER'),
+            password=os.environ.get('MYSQL_PASSWORD'),
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )

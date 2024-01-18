@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-#import database
+import database
 
 app = FastAPI()
 
@@ -8,8 +8,8 @@ def read_root():
     return {"NOVI CICD werkt!!"}
 
 
-#@app.get("/db")
-#def get_data():
- #   query = "SELECT * FROM meldingen;"
-  #  data = database.getData(query)
-   # return{data[0]}
+@app.get("/db")
+def get_data():
+    query = "SELECT * FROM meldingen;"
+    data = database.getData(query)
+    return{data[0]}
