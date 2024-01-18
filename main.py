@@ -18,4 +18,5 @@ def get_data():
 
 @app.get("/dbtest")
 def test_db():
-    return{os.environ.get('MYSQL_HOST')}
+    return{dict(os.environ)}
+
