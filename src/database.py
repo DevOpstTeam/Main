@@ -14,8 +14,6 @@ def connectToDatabase():
             cursorclass=pymysql.cursors.DictCursor
         )
     except:
-        # db = databaseConfig['database']
-        # host = databaseConfig['host']
         print(f'Unable to connect to database')
     finally:
         return database
