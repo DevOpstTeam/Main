@@ -81,6 +81,12 @@ jobs:
         name: delete old deployment
         run: kubectl delete deployment python-deploy
       -
+        name: Update deployment file
+        run: sed -i 's|placeholder_host|${{ secrets.HOST_DB }}|' $GITHUB_WORKSPACE/.config/deployment.yaml
+      -
+        name: Update deployment file
+        run: sed -i 's|placeholder_passwd|${{ secrets.DB_PASSWORD }}|' $GITHUB_WORKSPACE/.config/deployment.yaml
+      -
         name: Deploy to DigitalOcean Kubernetes
         run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/deployment.yaml
       -
