@@ -30,8 +30,6 @@ spec:
           value: "p2000"
         - name: MYSQL_PASSWORD
           value: "placeholder_passwd"
-
-
       
 
 
