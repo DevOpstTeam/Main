@@ -50,7 +50,7 @@ def insertData(abp, priority, date, time, postcode):
         cursor.execute(sql, val)
 
         connection.commit()
-        print(f'{cursor.rowcount} records inserted')
+        print('Record inserted')
     except:
         print(f'Unable to insert data into meldingen: \n\t{abp}\n\t{priority}\n\t{date}\n\t{time}\n\t{postcode}')
     finally:
