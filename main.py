@@ -12,4 +12,4 @@ def read_root():
 def get_data():
     query = "SELECT * FROM meldingen;"
     data = database.getData(query)
-    return{data[0]}
+    return str({data[0]})
