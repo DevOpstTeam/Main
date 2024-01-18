@@ -1,63 +1,50 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
+apiVersion: databases.digitalocean.com/v1alpha1
+kind: DatabaseClusterReference
 metadata:
-  name: mysql-pvc-claim
+  name: devops-db
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: do-block-storage
+  uuid: 89658290-4c9d-43a5-8006-de9b95c7f006
 
-apiVersion: v1
-kind: Service
+apiVersion: databases.digitalocean.com/v1alpha1
+kind: DatabaseUserReference
 metadata:
-  name: mysql
+  name: doadmin
 spec:
-  ports:
-  - port: 3306
-  selector:
-    app: mysql
-  clusterIP: None
----
+  databaseCluster:
+    apiGroup: databases.digitalocean.com
+    kind: DatabaseClusterReference
+    name: devops-db
+  username: doadmin
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: my-app
+  namespace: app-namespace
+  labels:
+    app: my-app
 spec:
-  selector:
-    matchLabels:
-      app: mysql
-  strategy:
-    type: Recreate
   template:
-    metadata:
-      labels:
-        app: mysql
     spec:
       containers:
-      - image: mysql:5.6
-        name: mysql
+      - name: 
+        image: 
         env:
         - name: MYSQL_HOST
-          value: ${{ secrets.HOST_DB }}
-        - name: MYSQL_PORT
-          value: "25060"
-        - name: MYSQL_DATABASE
-          value: p2000
+          valueFrom:
+            configMapKeyRef:
+              name: db-ref-private-connection
+              key: private-devops-db-do-user-15578676-0.c.db.ondigitalocean.com
         - name: MYSQL_USER
-          value: doadmin
+          valueFrom:
+            secretKeyRef:
+              name: sample-user-credentials
+              key: doadmin
         - name: MYSQL_PASSWORD
-          value: ${{ secrets.DB_PASSWORD }}
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pvc-claim
+          valueFrom:
+            secretKeyRef:
+              name: sample-user-credentials
+              key: ${{ secrets.DB_PASSWORD }}
+
+
 
