@@ -6,7 +6,7 @@ def connectToDatabase():
     try:
         database = pymysql.connect(
             host=os.environ.get('MYSQL_HOST'),
-            port=os.environ.get('MYSQL_PORT'),
+            port=int(os.environ.get('MYSQL_PORT')),
             db=os.environ.get('MYSQL_DB'),
             user=os.environ.get('MYSQL_USER'),
             password=os.environ.get('MYSQL_PASSWORD'),
