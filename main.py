@@ -16,7 +16,5 @@ def get_data():
     msg = f'\tMESSAGE\n{data[0]["id"]}\n{data[0]["ABP"]}\n{data[0]["Postcode"]}'
     return{msg}
 
-@app.get("/dbtest")
-def test_db():
-    return str(dict(os.environ))
+
 
