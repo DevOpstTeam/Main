@@ -6,6 +6,8 @@ WORKDIR /app
 #copy working directory
 COPY . /app
 
+RUN sudo apt-get install libmysqlclient-dev
+
 # install dependencies
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
