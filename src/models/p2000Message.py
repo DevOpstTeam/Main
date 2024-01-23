@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime
 from .base import Base
 import os
 
 class P2000Message(Base):
-    __tablename__ = os.environ.get('MYSQL_DB')
+    __tablename__ = "site_meldingen"
     id = Column(Integer, primary_key=True, index=True)
-    Datum = Column(String)
+    Datum = Column(DateTime)
     Tijd = Column(String)
     ABP = Column(String)
     Prioriteit = Column(Integer)
