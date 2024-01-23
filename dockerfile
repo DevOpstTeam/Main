@@ -1,21 +1,22 @@
 FROM python:3.10-slim
 
-# set the working directory
+# Set the working directory
 WORKDIR /app
 
-#copy working directory
+# Copy the contents of the local working directory to the Docker image
 COPY . /app
 
-RUN sudo apt-get install libmysqlclient-dev
+# Install system dependencies
+RUN apt-get update && apt-get install -y libmysqlclient-dev
 
-# install dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-# exit root
+# Switch to a non-root user
 USER 1000:1000
 
-# expose port
+# Expose port
 EXPOSE 8080
 
-# start the server
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0" , "--port", "8080", "--reload"]
+# Start the server
+ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
