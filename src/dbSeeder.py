@@ -73,15 +73,21 @@ try:
 
         msgCapCodes = ""
         for capCode in capCodes:
-            # msgCapCodes += capCode.text + "\n"
-            msgCapCodes = capCode.text.split(" ")[0]
+            # msgCapCodes += capCode.text + "-"
+            msgCapCodes += capCode.text
+            break   # database value is only 100 characters
 
         msg = P2000Message(time=msgTime, date=msgDate, region=P2000Regions[int(msgRegion)], service=services, capcodes=msgCapCodes)
         P2000Messages.append(msg)
         print('.', end="")
 except:
     for message in P2000Messages:
-        print(f'\n\t[MESSAGE]\nDate: {message.date}\nTime: {message.time}\nRegion: {message.region}\n{message.service}\n{message.capcodes}')
-        database.insertData(message.service, message.capcodes, message.date, message.time, message.region)    
+        print(f'\n\t[MESSAGE]\nDate: {message.date}\nTime: {message.time}\nRegion: {message.region}\n{message.service.split(" ")[0]}\n{message.service.split(" ")[1]}\n{message.capcodes}')
+        database.insertData(abp=message.service.split(" ")[0],
+                            priority=message.service.split(" ")[1],
+                            capcode=message.capcodes,
+                            date=message.date,
+                            time=message.time,
+                            region=message.region)    
     print("No more messages")
     driver.close()
