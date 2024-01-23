@@ -6,8 +6,9 @@ WORKDIR /app
 # Copy the contents of the local working directory to the Docker image
 COPY . /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y libmysqlclient-dev
+RUN apt-get update && apt-get install -y --no-install-recommends \
+   libmariadb-dev-compat gcc                   `: MySQL client` \
+&& rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
