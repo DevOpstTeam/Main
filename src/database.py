@@ -3,15 +3,12 @@ import os
 
 def connectToDatabase():
     try:
-        # TODO SSL Settings
         return pymysql.connect(
             host=os.environ.get('MYSQL_HOST'),
             port=int(os.environ.get('MYSQL_PORT')),
             database=os.environ.get('MYSQL_DB'),
             user=os.environ.get('MYSQL_USER'),
             password=os.environ.get('MYSQL_PASSWORD'),
-            ssl_ca=os.environ.get('MYSQL_SSLCERT'),
-            ssl_verify_cert=True,
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
