@@ -19,7 +19,8 @@ spec:
         image: registry.digitalocean.com/project-devops/mathijs2002/devops:latest
         ports:
         - containerPort: 8080
-        requests:
+        resources:
+          requests:
             cpu: 100m
         env:
         - name: MYSQL_USER
@@ -32,6 +33,7 @@ spec:
           value: "p2000"
         - name: MYSQL_PASSWORD
           value: "placeholder_passwd"
+
   
 
 
