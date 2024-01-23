@@ -90,7 +90,7 @@ menuOption = showMainMenu()
 while menuOption != len(mainMenu):
     if menuOption == 1:
         # P2000 bericht
-        query = "SELECT * FROM meldingen;"
+        query = "SELECT * FROM site_meldingen;"
         dataMsg = database.getData(query)
 
         for row in dataMsg:
