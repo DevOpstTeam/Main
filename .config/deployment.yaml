@@ -33,24 +33,24 @@ spec:
         - name: MYSQL_PASSWORD
           value: "placeholder_passwd"
   
-  ---
+---
 
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: python-deploy
+  name: hello
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: python-deploy
+    name: hello
   minReplicas: 1
-  maxReplicas: 7
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70
+        averageUtilization: 60
 
