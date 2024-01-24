@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from .base import Base
-import os
 
 class P2000Message(Base):
     __tablename__ = "site_meldingen"

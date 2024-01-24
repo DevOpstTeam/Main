@@ -2,4 +2,5 @@ fastapi[all]
 uvicorn
 pymysql
 sqlalchemy
+pydantic
 mysqlclient==2.0.3
