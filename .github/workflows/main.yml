@@ -78,7 +78,9 @@ jobs:
       - 
         name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 python-api
-        
+      -
+        name: delete old deployment
+        run: kubectl delete deployment python-deploy
       - 
         name: Update deployment file
         run: |
@@ -93,9 +95,6 @@ jobs:
       -
         name: Verify deployment
         run: kubectl rollout status deployment/python-deploy
-      -
-        name: Deploy hpa
-        run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/hpa.yaml
       -
         name: Deploy load balancer
         run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/loadbalanc.yaml
