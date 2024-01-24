@@ -33,7 +33,7 @@ spec:
           value: "p2000"
         - name: MYSQL_PASSWORD
           value: "placeholder_passwd"
-  ---
+---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -52,6 +52,7 @@ spec:
       target:
         type: Utilization
         averageUtilization: 60
+
 
   
 
