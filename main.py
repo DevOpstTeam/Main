@@ -3,15 +3,7 @@ from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
 from src.models.p2000Message import P2000Message
 from src.alchemyDatabase import SessionLocal
-from datetime import datetime
-
-# class messageFilterType(str, Enum):
-#     date = "datum"
-#     time = "tijd"
-#     abp = "abp"
-#     priority = "prioriteit"
-#     #region = "regio"
-#     capCode = "capcode"
+from datetime import datetime, time
 
 app = FastAPI()
 
@@ -52,24 +44,29 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     return db_message
 
 @app.get("/messages/filter/")
-def filter_messages(date: str | None = None, timeEnd: str | None = None, timeStart: str | None = None, abp: str | None = None, priority:int | None = None, region: str | None = None, capcode: str | None = None, db=Depends(get_db)):
+def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeEnd: str | None = None, timeStart: str | None = None, abp: str | None = None, priority:int | None = None, region: str | None = None, capcode: str | None = None, db=Depends(get_db)):
     messages = db.query(P2000Message)
-    if date != None:
-        # TODO Fix
-        messages = messages.filter(P2000Message.Datum == date)
+    if dateStart != None:
+        dateFormat = "%d-%M-%Y"
+        startDate = datetime.strptime(dateStart, dateFormat)
+        messages = messages.filter(P2000Message.Datum >= startDate)
+
+        if dateEnd != None:
+            endDate = datetime.strptime(dateEnd, dateFormat)
+            messages = messages.filter(P2000Message.Datum <= endDate)
     if timeStart != None:
         timeFormat = "%H:%M:%S"
-        start = datetime.strptime(timeStart, timeFormat)
+        start = time.strftime(timeStart, timeFormat)
         if timeEnd != None:
-            end = datetime.strptime(timeEnd, timeFormat)
+            end = time.strftime(timeEnd, timeFormat)
             # TODO Fix
             messages = messages.filter(datetime.strptime(str(f'{P2000Message.Tijd}'), timeFormat) > start and
                                        datetime.strptime(str(f'{P2000Message.Tijd}'), timeFormat) < end)
         else:
             # TODO Fix
-            messages = messages.filter(P2000Message.Tijd > start)
+            messages = messages.filter(P2000Message.Tijd > timeStart)
     if abp != None:
-        messages = messages.filter(P2000Message.ABP == abp)
+        messages = messages.filter(P2000Message.ABP.contains(abp))
     if priority != None:
         messages = messages.filter(P2000Message.Prioriteit == priority)
     if region != None:

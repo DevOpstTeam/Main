@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from datetime import date
+from datetime import date, time
 
 class P2000MessageBase(BaseModel):
     Datum: date
