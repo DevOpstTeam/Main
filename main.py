@@ -15,7 +15,7 @@ def get_db():
 
 @app.get("/")
 def read_root():
-    return {"wat moet je hier"}
+    return {"cicd werkt!!"}
 
 @app.get("/messages")
 def read_messages(db=Depends(get_db)) -> list[messageSchema]:

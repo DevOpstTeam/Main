@@ -5,7 +5,7 @@ metadata:
   labels:
     app: python-deploy
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: python-deploy
@@ -43,7 +43,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: python-deploy
-  minReplicas: 3
+  minReplicas: 2
   maxReplicas: 15
   metrics:
   - type: Resource
