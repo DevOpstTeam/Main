@@ -1,8 +1,8 @@
 from pydantic import BaseModel, ConfigDict
-from datetime import datetime
+from datetime import date
 
 class P2000MessageBase(BaseModel):
-    Datum: datetime
+    Datum: date
     Tijd: str
     ABP: str
     Prioriteit: int
