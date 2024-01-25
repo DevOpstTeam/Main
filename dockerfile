@@ -12,7 +12,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-
+    
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
