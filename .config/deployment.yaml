@@ -33,7 +33,7 @@ spec:
           value: "p2000"
         - name: MYSQL_PASSWORD
           value: "placeholder_passwd"
-  ---
+---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -43,8 +43,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: python-deploy
-  minReplicas: 1
-  maxReplicas: 4
+  minReplicas: 2
+  maxReplicas: 15
   metrics:
   - type: Resource
     resource:
@@ -52,6 +52,7 @@ spec:
       target:
         type: Utilization
         averageUtilization: 60
+
 
   
 

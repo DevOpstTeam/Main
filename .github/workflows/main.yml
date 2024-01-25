@@ -96,9 +96,6 @@ jobs:
         name: Verify deployment
         run: kubectl rollout status deployment/python-deploy
       -
-        name: Deploy hpa
-        run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/hpa.yaml
-      -
         name: Deploy load balancer
         run: kubectl apply -f ${GITHUB_WORKSPACE}/.config/loadbalanc.yaml
       
