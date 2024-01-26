@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from models.base import Base
 
 SQLALCHEMY_DATABASE_URL = f'mysql://{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}:{os.environ.get("MYSQL_PORT")}/{os.environ.get("MYSQL_DB")}'
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -18,7 +18,7 @@ def init_db():
     Base.metadata.create_all(bind=engine)
     seed_db()
 
-def seed_db():
+def seed_db(): 
     print('Seeding DB')
 
     from models.p2000Message import P2000Message as message
