@@ -5,7 +5,7 @@ class P2000Message(Base):
     __tablename__ = "site_meldingen"
     id = Column(Integer, primary_key=True, index=True)
     Datum = Column(Date)
-    Tijd = Column(String)
+    Tijd = Column(String)   # TODO Change time in db to time instead of string
     ABP = Column(String)
     Prioriteit = Column(Integer)
     Regio = Column(String)

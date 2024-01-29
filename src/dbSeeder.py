@@ -1,7 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-import database
+from models.p2000Message import P2000Message
+from alchemyDatabase import SessionLocal
+from datetime import datetime
 
 P2000Regions = {1: "Groningen",
            2: "Friesland",
@@ -28,14 +30,6 @@ P2000Regions = {1: "Groningen",
            23: "Limburg Noord",
            24: "Limburg Zuid",
            25: "Flevoland"}
-
-class P2000Message:
-    def __init__(self, date, time, region, service, capcodes):
-        self.date = date
-        self.time = time
-        self.region = region
-        self.service = service
-        self.capcodes = capcodes
 
 P2000Messages = list()
 
@@ -77,17 +71,23 @@ try:
             msgCapCodes += capCode.text
             break   # database value is only 100 characters
 
-        msg = P2000Message(time=msgTime, date=msgDate, region=P2000Regions[int(msgRegion)], service=services, capcodes=msgCapCodes)
+        msg = P2000Message(Tijd=msgTime, 
+                           Datum=datetime.strptime(msgDate, "%d-%m-%y"), 
+                           Regio=P2000Regions[int(msgRegion)], 
+                           Prioriteit=2, 
+                           ABP=services, 
+                           Capcode=msgCapCodes)
         P2000Messages.append(msg)
         print('.', end="")
 except:
+    # At some point, selenium just fails for this website (because the website auto updates)
+    db = SessionLocal()
+    db.add_all(P2000Messages)
+    db.commit()
+    db.close()
+
     for message in P2000Messages:
-        print(f'\n\t[MESSAGE]\nDate: {message.date}\nTime: {message.time}\nRegion: {message.region}\n{message.service.split(" ")[0]}\n{message.service.split(" ")[1]}\n{message.capcodes}')
-        database.insertData(abp=message.service.split(" ")[0],
-                            priority=message.service.split(" ")[1],
-                            capcode=message.capcodes,
-                            date=message.date,
-                            time=message.time,
-                            region=message.region)    
+        print(f'\n\t[MESSAGE]\nDate: {message.Datum}\nTime: {message.Tijd}\nRegion: {message.Regio}\n{message.ABP.split(" ")[0]}\n{message.ABP.split(" ")[1]}\n{message.Capcode}')
+
     print("No more messages")
     driver.close()

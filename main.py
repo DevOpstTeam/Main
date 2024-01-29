@@ -64,7 +64,7 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
                                        datetime.strptime(str(f'{P2000Message.Tijd}'), timeFormat) < end)
         else:
             # TODO Fix
-            messages = messages.filter(P2000Message.Tijd > timeStart)
+            messages = messages.filter(int(P2000Message.Tijd[0:2]) > int(timeStart[0:2]))
     if abp != None:
         messages = messages.filter(P2000Message.ABP.contains(abp))
     if priority != None:
