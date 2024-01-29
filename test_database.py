@@ -1,16 +1,24 @@
 import os
 
-#from sqlalchemy import create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-#from sqlalchemy.orm import sessionmaker
-from src.alchemyDatabase import SessionLocal
-from src.alchemyDatabase import engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import URL
+
 from models.base import Base
 
-#SQLALCHEMY_DATABASE_URL = f'mysql://{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}:{os.environ.get("MYSQL_PORT")}/{os.environ.get("MYSQL_DB")}'
-#engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+# db_url = URL.create(
+#     "mysql",
+#     username=os.environ.get("MYSQL_USER"),
+#     password=os.environ.get("MYSQL_PASSWORD"),
+#     host=os.environ.get("MYSQL_HOST"),
+#     port=os.environ.get("MYSQL_PORT"),
+#     database=os.environ.get("MYSQL_DB")
+# )
 
-db = SessionLocal
+SQLALCHEMY_DATABASE_URL = f'mysql://{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}:{os.environ.get("MYSQL_PORT", 25060)}/{os.environ.get("MYSQL_DB")}'
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def init_db():
     from models.p2000Message import P2000Message
@@ -23,7 +31,7 @@ def seed_db():
 
     from models.p2000Message import P2000Message as message
 
-    db = SessionLocal()
+    db = SessionLocal
 
     if db.query(message).count == 0:
         messages = [
