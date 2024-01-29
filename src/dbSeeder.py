@@ -71,12 +71,14 @@ try:
             msgCapCodes += capCode.text
             break   # database value is only 100 characters
 
+        info = msgCapCodes[8:]
+
         msg = P2000Message(Tijd=msgTime, 
                            Datum=datetime.strptime(msgDate, "%d-%m-%y"), 
                            Regio=P2000Regions[int(msgRegion)], 
-                           Prioriteit=2, 
-                           ABP=services, 
-                           Capcode=msgCapCodes)
+                           Prioriteit=2,
+                           ABP=services.split(" ")[0], 
+                           Capcode=msgCapCodes.split(" ")[0])
         P2000Messages.append(msg)
         print('.', end="")
 except:
@@ -85,9 +87,6 @@ except:
     db.add_all(P2000Messages)
     db.commit()
     db.close()
-
-    for message in P2000Messages:
-        print(f'\n\t[MESSAGE]\nDate: {message.Datum}\nTime: {message.Tijd}\nRegion: {message.Regio}\n{message.ABP.split(" ")[0]}\n{message.ABP.split(" ")[1]}\n{message.Capcode}')
 
     print("No more messages")
     driver.close()
