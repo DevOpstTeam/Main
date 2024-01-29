@@ -44,7 +44,9 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     return db_message
 
 @app.get("/messages/filter/")
-def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeEnd: str | None = None, timeStart: str | None = None, abp: str | None = None, priority:int | None = None, region: str | None = None, capcode: str | None = None, db=Depends(get_db)):
+def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeEnd: str | None = None, 
+                    timeStart: str | None = None, abp: str | None = None, priority:int | None = None, 
+                    region: str | None = None, capcode: str | None = None, db=Depends(get_db)) -> list[messageSchema]:
     messages = db.query(P2000Message)
     if dateStart != None:
         dateFormat = "%d-%M-%Y"
