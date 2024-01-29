@@ -22,8 +22,9 @@ from sqlalchemy import URL
 #     database=os.environ.get("MYSQL_DB")
 # )
 
-SQLALCHEMY_DATABASE_URL = f'mysql://{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}:{os.environ.get("MYSQL_PORT", 25060)}/{os.environ.get("MYSQL_DB")}'
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+#SQLALCHEMY_DATABASE_URL = f'mysql://{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}:{os.environ.get("MYSQL_PORT", 25060)}/{os.environ.get("MYSQL_DB")}'
+SQLALCHEMY_DATABASE_URL = "mysql:///./test_db.db"
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 
 client = TestClient(app)
 
