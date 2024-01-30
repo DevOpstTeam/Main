@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import logging 
 import pytest
+import pymysql
 
 from src.models.base import Base
 from test_database import init_db
@@ -11,8 +12,8 @@ from test_database import init_db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
+SQLALCHEMY_DATABASE_URL = f'mysql:///{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}:{os.environ.get("MYSQL_PORT")}/{os.environ.get("MYSQL_DB")}'
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 app = FastAPI()
 client = TestClient(app)
@@ -25,5 +26,5 @@ def test_db():
     Base.metadata.drop_all(bind=engine)
 
 def test_read_main(test_db):
-    response = client.get('')
+    response = client.get('/message/')
     assert response.status_code == 200
