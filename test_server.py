@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 import logging 
 import pytest
 
-from models.base import Base
+from src.models.base import Base
 from test_database import init_db
 
 from sqlalchemy import create_engine
@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 SQLALCHEMY_DATABASE_URL = "mysql:///./test_db.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 app = FastAPI()
 client = TestClient(app)
