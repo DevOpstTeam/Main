@@ -11,7 +11,6 @@ from test_database import init_db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-
 SQLALCHEMY_DATABASE_URL = "mysql:///./test_db.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
