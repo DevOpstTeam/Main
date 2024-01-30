@@ -11,8 +11,8 @@ from test_database import init_db
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "mysql:///./test_db.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
 
 app = FastAPI()
 client = TestClient(app)
@@ -25,5 +25,5 @@ def test_db():
     Base.metadata.drop_all(bind=engine)
 
 def test_read_main(test_db):
-    response = client.get('/messages/')
+    response = client.get('')
     assert response.status_code == 200
