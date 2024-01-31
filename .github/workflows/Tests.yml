@@ -59,5 +59,11 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - 
       name: Test with pytest
+      env:
+        SECRET_HOST: ${{secrets.MYSQL_HOST}}
+        SECRET_USER: ${{secrets.MYSQL_USER}}
+        SECRET_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+        SECRET_PORT: ${{secrets.MYSQL_PORT}}
+        SECRET_DB: ${{secrets.MYSQL_PORT}}
       run: |
         pytest test_server.py
