@@ -10,6 +10,6 @@ def test_read_main():
     assert response.status_code == 200
     assert response.json() == ['cicd werkt!!']
 
-# def test_read_messages():
-#     response = client.get("/messages")
-#     assert response.status_code == 200
+def test_read_messages():
+    response = client.get("/messages")
+    assert response.status_code == 200
