@@ -23,5 +23,11 @@ def test_read_message_12():
                                'Prioriteit': 1,
                                'Regio': 'Noord en Oost Gelderland',
                                'Tijd': '12:45:09',
-                               'id': 12
-                               }
+                               'id': 12}
+
+def test_non_existing():
+    response = client.get("/messages/-1")
+    assert response.status_code == 404
+
+# def test_ceate():
+#     return
