@@ -60,10 +60,10 @@ jobs:
     - 
       name: Test with pytest
       env:
-        SECRET_HOST: ${{secrets.MYSQL_HOST}}
-        SECRET_USER: ${{secrets.MYSQL_USER}}
-        SECRET_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
-        SECRET_PORT: ${{secrets.MYSQL_PORT}}
-        SECRET_DB: ${{secrets.MYSQL_PORT}}
+        MYSQL_HOST: ${{secrets.MYSQL_HOST}}
+        MYSQL_USER: ${{secrets.MYSQL_USER}}
+        MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+        MYSQL_PORT: ${{secrets.MYSQL_PORT}}
+        MYSQL_DB: ${{secrets.MYSQL_DB}}
       run: |
         pytest test_server.py
