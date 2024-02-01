@@ -74,16 +74,9 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
             endDate = datetime.strptime(dateEnd, dateFormat)
             messages = messages.filter(P2000Message.Datum <= endDate)
     if timeStart != None:
-        timeFormat = "%H:%M:%S"
-        start = time.strftime(timeStart, timeFormat)
+        messages = messages.filter(P2000Message.Tijd > timeStart)
         if timeEnd != None:
-            end = time.strftime(timeEnd, timeFormat)
-            # TODO Fix
-            messages = messages.filter(datetime.strptime(str(f'{P2000Message.Tijd}'), timeFormat) > start and
-                                       datetime.strptime(str(f'{P2000Message.Tijd}'), timeFormat) < end)
-        else:
-            # TODO Fix
-            messages = messages.filter(int(P2000Message.Tijd[0:2]) > int(timeStart[0:2]))
+            messages = messages.filter(P2000Message.Tijd < timeEnd)
     if abp != None:
         messages = messages.filter(P2000Message.ABP.contains(abp))
     if priority != None:
