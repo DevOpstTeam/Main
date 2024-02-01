@@ -3,7 +3,7 @@ from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
 from src.models.p2000Message import P2000Message
 from src.alchemyDatabase import SessionLocal
-from datetime import datetime, time
+from datetime import datetime
 
 app = FastAPI()
 

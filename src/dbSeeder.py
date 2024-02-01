@@ -1,14 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
-from models.p2000Message import P2000Message
-from alchemyDatabase import SessionLocal
-from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from models.p2000Message import P2000Message
 from models.base import Base
+from alchemyDatabase import SessionLocal
+from datetime import datetime
 
-seedLocal = True
+seedLocal = False
 
 P2000Regions = {1: "Groningen",
            2: "Friesland",
@@ -99,6 +99,10 @@ except:
 
     db.add_all(P2000Messages)
     db.commit()
+
+    for message in db.query(P2000Message).all():
+        print(f'\t[Message]\n{message.Datum}\n{message.Tijd}\n{message.ABP}\n{message.Prioriteit}\n{message.Regio}\n{message.Capcode}\n')
+
     db.close()
 
     print("No more messages")
