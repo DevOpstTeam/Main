@@ -4,6 +4,11 @@ from selenium.webdriver.common.by import By
 from models.p2000Message import P2000Message
 from alchemyDatabase import SessionLocal
 from datetime import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models.base import Base
+
+seedLocal = True
 
 P2000Regions = {1: "Groningen",
            2: "Friesland",
@@ -83,7 +88,15 @@ try:
         print('.', end="")
 except:
     # At some point, selenium just fails for this website (because the website auto updates)
-    db = SessionLocal()
+    db = None
+    if seedLocal:
+        localEngine = create_engine("sqlite:///test_messages.db")
+        Base.metadata.create_all(bind=localEngine)
+        localDbSession = sessionmaker(autocommit=False, autoflush=False, bind=localEngine)
+        db = localDbSession()
+    else:
+        db = SessionLocal()
+
     db.add_all(P2000Messages)
     db.commit()
     db.close()
