@@ -51,7 +51,7 @@ jobs:
       with:
         action: "add"
         database_id: ${{ secrets.DATABASE_ID }}
-        digitalocean_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+        digitalocean_token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     - 
       name: Install dependencies
       run: |
@@ -81,4 +81,4 @@ jobs:
       with:
         action: "remove"
         database_id: ${{ secrets.DATABASE_ID }}
-        digitalocean_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+        digitalocean_token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
