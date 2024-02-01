@@ -32,30 +32,10 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devops:latest
-  Get-ip:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Get IP address
-        id: get_ip
-        run: |
-          IP=$(curl -s ifconfig.me)
-          echo "::set-output name=ip_adress::$IP"
-      
-      - name: Add Trusted Source
-        env:
-          DO_API_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-          IP_ADDRESS: ${{steps.get_ip.ip_adress}}
-          DATA_BASE: ${{secrets.MYSQL_DB}}  
-        run: |
-          curl -X Post\
-          -H "Content-Type": application/json \
-          -H "Authorization: Bearer $DO_API_TOKEN" \
-          -d "{\"type\":\"ip_addr\", \"value\":"${IP_ADDRESS}\"}" \
-          "https://api.digitalocean.com/v2/databases/${DATA_BASE}/firewall"
+
   test:
     runs-on: ubuntu-latest
-    needs: Get-ip
+    needs: build
     steps:
     - 
       uses: actions/checkout@v3
@@ -64,6 +44,14 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.11.4"
+    # add the IP address
+    - 
+      name: Add IP address to trusted source (managed database)
+      uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
+      with:
+        action: "add"
+        database_id: ${{ secrets.DATABASE_ID }}
+        digitalocean_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
     - 
       name: Install dependencies
       run: |
@@ -87,3 +75,10 @@ jobs:
         MYSQL_DB: ${{secrets.MYSQL_DB}}
       run: |
         pytest test_server.py
+    - 
+      name: Remove IP address to trusted source (managed database)
+      uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
+      with:
+        action: "remove"
+        database_id: ${{ secrets.DATABASE_ID }}
+        digitalocean_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
