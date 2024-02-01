@@ -23,13 +23,6 @@ def read_messages(db=Depends(get_db)) -> list[messageSchema]:
     messages = db.query(P2000Message).all()
     return messages
 
-@app.get("/messages/{message_id}")
-def read_message(message_id: int, db=Depends(get_db)) -> messageSchema:
-    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
-    if message == None:
-        raise HTTPException(status_code=404, detail=f'message with ID {message_id} not found')
-    return message
-
 @app.post("/messages/", status_code=201)
 def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageSchema:
     db_message = P2000Message(Datum=message.Datum,
@@ -43,10 +36,28 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     db.refresh(db_message)
     return db_message
 
+@app.get("/messages/{message_id}")
+def read_message(message_id: int, db=Depends(get_db)) -> messageSchema:
+    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
+    if message == None:
+        raise HTTPException(status_code=404, detail=f'message with ID {message_id} not found')
+    return message
+
 @app.delete("/messages/{message_id}", status_code=200)
-def delete_card(message_id: int, db = Depends(get_db)):
+def delete_message(message_id: int, db = Depends(get_db)):
     message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
     db.delete(message)
+    db.commit()
+
+@app.patch("/message/{message_id}")
+def update_message(newMessage: messageSchema, db = Depends(get_db)):
+    message = db.query(P2000Message).filter(P2000Message.id == newMessage.id).first()
+    message.update({P2000Message.Datum: newMessage.Datum,
+                    P2000Message.Tijd: newMessage.Tijd,
+                    P2000Message.ABP: newMessage.ABP,
+                    P2000Message.Prioriteit: newMessage.Prioriteit,
+                    P2000Message.Regio: newMessage.Regio,
+                    P2000Message.Capcode: newMessage.Capcode})
     db.commit()
 
 @app.get("/messages/filter/")
