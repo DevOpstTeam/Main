@@ -43,6 +43,12 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     db.refresh(db_message)
     return db_message
 
+@app.delete("/messages/{message_id}", status_code=200)
+def delete_card(message_id: int, db = Depends(get_db)):
+    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
+    db.delete(message)
+    db.commit()
+
 @app.get("/messages/filter/")
 def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeEnd: str | None = None, 
                     timeStart: str | None = None, abp: str | None = None, priority:int | None = None, 
