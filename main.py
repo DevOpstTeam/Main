@@ -3,7 +3,7 @@ from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
 from src.models.p2000Message import P2000Message
 from src.alchemyDatabase import SessionLocal
-from datetime import datetime, time
+from datetime import datetime
 
 app = FastAPI()
 
@@ -23,13 +23,6 @@ def read_messages(db=Depends(get_db)) -> list[messageSchema]:
     messages = db.query(P2000Message).all()
     return messages
 
-@app.get("/messages/{message_id}")
-def read_message(message_id: int, db=Depends(get_db)) -> messageSchema:
-    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
-    if message == None:
-        raise HTTPException(status_code=404, detail=f'message with ID {message_id} not found')
-    return message
-
 @app.post("/messages/", status_code=201)
 def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageSchema:
     db_message = P2000Message(Datum=message.Datum,
@@ -43,8 +36,34 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     db.refresh(db_message)
     return db_message
 
+@app.get("/messages/{message_id}")
+def read_message(message_id: int, db=Depends(get_db)) -> messageSchema:
+    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
+    if message == None:
+        raise HTTPException(status_code=404, detail=f'message with ID {message_id} not found')
+    return message
+
+@app.delete("/messages/{message_id}", status_code=200)
+def delete_message(message_id: int, db = Depends(get_db)):
+    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
+    db.delete(message)
+    db.commit()
+
+@app.patch("/message/{message_id}")
+def update_message(newMessage: messageSchema, db = Depends(get_db)):
+    message = db.query(P2000Message).filter(P2000Message.id == newMessage.id).first()
+    message.update({P2000Message.Datum: newMessage.Datum,
+                    P2000Message.Tijd: newMessage.Tijd,
+                    P2000Message.ABP: newMessage.ABP,
+                    P2000Message.Prioriteit: newMessage.Prioriteit,
+                    P2000Message.Regio: newMessage.Regio,
+                    P2000Message.Capcode: newMessage.Capcode})
+    db.commit()
+
 @app.get("/messages/filter/")
-def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeEnd: str | None = None, timeStart: str | None = None, abp: str | None = None, priority:int | None = None, region: str | None = None, capcode: str | None = None, db=Depends(get_db)):
+def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeEnd: str | None = None, 
+                    timeStart: str | None = None, abp: str | None = None, priority:int | None = None, 
+                    region: str | None = None, capcode: str | None = None, db=Depends(get_db)) -> list[messageSchema]:
     messages = db.query(P2000Message)
     if dateStart != None:
         dateFormat = "%d-%M-%Y"
@@ -55,16 +74,9 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
             endDate = datetime.strptime(dateEnd, dateFormat)
             messages = messages.filter(P2000Message.Datum <= endDate)
     if timeStart != None:
-        timeFormat = "%H:%M:%S"
-        start = time.strftime(timeStart, timeFormat)
-        if timeEnd != None:
-            end = time.strftime(timeEnd, timeFormat)
-            # TODO Fix
-            messages = messages.filter(datetime.strptime(str(f'{P2000Message.Tijd}'), timeFormat) > start and
-                                       datetime.strptime(str(f'{P2000Message.Tijd}'), timeFormat) < end)
-        else:
-            # TODO Fix
-            messages = messages.filter(int(P2000Message.Tijd[0:2]) > int(timeStart[0:2]))
+        messages = messages.filter(P2000Message.Tijd > timeStart)
+    if timeEnd != None:
+        messages = messages.filter(P2000Message.Tijd < timeEnd)
     if abp != None:
         messages = messages.filter(P2000Message.ABP.contains(abp))
     if priority != None:
