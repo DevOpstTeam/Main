@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from src.dbSeeder import seedLocal
 
 from main import app
 
+seedLocal = True
 client = TestClient(app)
 
 def test_read_main():
@@ -31,3 +33,5 @@ def test_non_existing():
 
 # def test_ceate():
 #     return
+    
+seedLocal = False

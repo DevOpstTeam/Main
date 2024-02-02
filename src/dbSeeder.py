@@ -3,9 +3,9 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models.p2000Message import P2000Message
-from models.base import Base
-from alchemyDatabase import SessionLocal
+from src.models.p2000Message import P2000Message
+from src.models.base import Base
+from src.alchemyDatabase import SessionLocal
 from datetime import datetime
 
 seedLocal = False
