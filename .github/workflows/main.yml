@@ -47,7 +47,7 @@ jobs:
         MYSQL_PORT: ${{secrets.MYSQL_PORT}}
         MYSQL_DB: ${{secrets.MYSQL_DB}}
       run: |
-        pytest test_server.py -cov
+        pytest test_server.py --cov
     - 
       name: Remove IP address to trusted source (managed database)
       uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
