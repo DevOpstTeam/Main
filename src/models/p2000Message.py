@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, Date, Time
+""" Pydantic models for the P2000 database. """
+
+from sqlalchemy import Column, Integer, String, Date
 from .base import Base
 
 class P2000Message(Base):

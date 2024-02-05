@@ -1,5 +1,7 @@
+""" Pydantic schemas for the P2000 database. """
+
 from pydantic import BaseModel, ConfigDict
-from datetime import date, time
+from datetime import date
 
 class P2000MessageBase(BaseModel):
     Datum: date

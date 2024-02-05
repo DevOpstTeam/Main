@@ -1,3 +1,12 @@
+""" Database seeder
+
+Populates the P2000 database with data.
+Can also create a local database by setting the seedLocal variable to True.
+
+This script makes use of the selenium driver to scrape the 
+https://m.livep2000.nl/ website for p2000 messages.
+"""
+
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
@@ -47,6 +56,15 @@ driver.implicitly_wait(5)
 driver.get("https://m.livep2000.nl/")
 
 def tryElement(element, cssSelector):
+    """Try to search an html element for anything that matches the CSS Selector.
+
+    Parameters:
+    element: the html element to search.
+    cssSelector: CSS selector to look for in the given element.
+
+    Returns:
+    str: text from any items matching the CSS selector, separated by spaces.
+    """
     try:
         items = element.find_elements(By.CSS_SELECTOR, cssSelector)
         msg = ""
