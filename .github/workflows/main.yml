@@ -98,7 +98,9 @@ jobs:
       -
         name: Checkout files
         uses: actions/checkout@v2
-
+      -
+        name: debug
+        run: echo ${{ needs.build.outputs.latest_release }}
       -
         name: Install doctl
         uses: digitalocean/action-doctl@v2
