@@ -119,24 +119,28 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
     List of P2000 messages.
     """
     messages = db.query(P2000Message)
-    if dateStart != None:
+    
+    try:
         dateFormat = "%d-%M-%Y"
-        startDate = datetime.strptime(dateStart, dateFormat)
-        messages = messages.filter(P2000Message.Datum >= startDate)
-
+        if dateStart != None:
+            startDate = datetime.strptime(dateStart, dateFormat)
+            messages = messages.filter(P2000Message.Datum >= startDate)
         if dateEnd != None:
             endDate = datetime.strptime(dateEnd, dateFormat)
             messages = messages.filter(P2000Message.Datum <= endDate)
-    if timeStart != None:
-        messages = messages.filter(P2000Message.Tijd > timeStart)
-    if timeEnd != None:
-        messages = messages.filter(P2000Message.Tijd < timeEnd)
-    if abp != None:
-        messages = messages.filter(P2000Message.ABP.contains(abp))
-    if priority != None:
-        messages = messages.filter(P2000Message.Prioriteit == priority)
-    if region != None:
-        messages = messages.filter(P2000Message.Regio.contains(region))
-    if capcode != None:
-        messages = messages.filter(P2000Message.Capcode.contains(capcode))
+        if timeStart != None:
+            messages = messages.filter(P2000Message.Tijd > timeStart)
+        if timeEnd != None:
+            messages = messages.filter(P2000Message.Tijd < timeEnd)
+        if abp != None:
+            messages = messages.filter(P2000Message.ABP.contains(abp))
+        if priority != None:
+            messages = messages.filter(P2000Message.Prioriteit == priority)
+        if region != None:
+            messages = messages.filter(P2000Message.Regio.contains(region))
+        if capcode != None:
+            messages = messages.filter(P2000Message.Capcode.contains(capcode))
+    except Exception as e:
+        print(e)
+        return list()
     return messages.all()
