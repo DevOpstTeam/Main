@@ -73,12 +73,13 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - 
-        name: latest release
+
+      - name: latest release
         run: |
           set -x
           LATEST_RELEASE=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | grep "tag_name" | cut -d '"' -f 4)
-          echo $LATEST_RELEASE >> $GITHUB_ENV
+          echo "Latest release: $LATEST_RELEASE" >> $GITHUB_ENV
+          echo "DOCKER_TAG=$(echo $LATEST_RELEASE | tr '.' '-')" >> $GITHUB_ENV
       
       -
         name: Build and push
@@ -87,7 +88,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.LATEST_RELEASE }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.DOCKER_TAG }}
 
   push:
     runs-on: ubuntu-latest
