@@ -74,7 +74,7 @@ jobs:
       -
         name: Get release tag
         id: get_tag
-        run: echo "::set-output name=TAG::$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')"
+        run: echo "::set-output name=TAG::$(echo "${{ github.ref }}" | sed 's/refs\/tags\///;s/refs\/heads\///')"
       -
         name: Build and push
         uses: docker/build-push-action@v2
