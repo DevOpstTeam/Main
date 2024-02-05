@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+    tags: [ 'v*.*.*' ]
 
 jobs:
   test:
@@ -72,6 +73,13 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+        
+      - name: Get release tag
+        id: get_tag
+        run: echo "::set-output name=tag::$(curl -sH "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)"
+
+      - name: Display release tag
+        run: echo "Release tag is ${{ steps.get_tag.outputs.tag }}"
 
   
       -
@@ -81,7 +89,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event.release.tag_name }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.get_tag.outputs.tag }}
 
   push:
     runs-on: ubuntu-latest
@@ -101,13 +109,13 @@ jobs:
         run: doctl registry login
       -
         name: Pull Docker image from Docker Hub
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event.release.tag_name }}
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.get_tag.outputs.tag }}
       -
         name: Docker tag
-        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event.release.tag_name }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ github.event.release.tag_name }}
+        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.get_tag.outputs.tag }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ steps.get_tag.outputs.tag }}
       -
         name: Push Docker image to DigitalOcean
-        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ github.event.release.tag_name }}
+        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ steps.get_tag.outputs.tag }}
       - 
         name: Remove old images from Container Registry
         run: doctl registry garbage-collection start --include-untagged-manifests --force project-devops
