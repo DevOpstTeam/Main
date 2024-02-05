@@ -81,7 +81,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event_name == 'release' && github.event.release.tag_name || github.sha }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event.release.tag_name }}
 
   push:
     runs-on: ubuntu-latest
@@ -101,13 +101,13 @@ jobs:
         run: doctl registry login
       -
         name: Pull Docker image from Docker Hub
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event_name == 'release' && github.event.release.tag_name || github.sha }}
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event.release.tag_name }}
       -
         name: Docker tag
-        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.RELEASE_TAG }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ steps.get_release_info.outputs.TAG_NAME }}
+        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ github.event.release.tag_name }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ github.event.release.tag_name }}
       -
         name: Push Docker image to DigitalOcean
-        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ github.event_name == 'release' && github.event.release.tag_name || github.sha }}
+        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ github.event.release.tag_name }}
       - 
         name: Remove old images from Container Registry
         run: doctl registry garbage-collection start --include-untagged-manifests --force project-devops
