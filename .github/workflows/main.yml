@@ -75,6 +75,12 @@ jobs:
       - name: Set release tag
         id: set_release_tag
         run: echo "RELEASE_TAG=${{ steps.get_release_info.outputs.TAG_NAME }}" >> $GITHUB_ENV
+      
+      - name: Debug
+        run: echo ${{ env.RELEASE_TAG }}
+      
+
+  
       -
         name: Build and push
         uses: docker/build-push-action@v2
