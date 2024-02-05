@@ -76,7 +76,11 @@ jobs:
         
       - name: Get release tag
         id: get_tag
-        run: echo "::set-output name=tag::$(curl -sH "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)"
+        run: |
+          TAG=$(curl -sH "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          echo "::set-output name=tag::$TAG"
+      
 
       - name: Display release tag
         run: echo "Release tag is ${{ steps.get_tag.outputs.tag }}"
