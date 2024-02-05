@@ -119,10 +119,15 @@ jobs:
         run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.LATEST_RELEASE }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
       -
         name: Push Docker image to DigitalOcean
-        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
+        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }} 
       - 
-        name: Remove old images from Container Registry
-        run: doctl registry garbage-collection start --include-untagged-manifests --force project-devops
+        name: DigitalOcean Container Registry Remove
+        uses: ripplr-io/docr-image-remove@v1
+        with:
+          image_repository: mathijs2002/devops # required
+          buffer_size: 3
+
+    
 
 
   deploy:
