@@ -109,13 +109,13 @@ jobs:
         run: doctl registry login
       -
         name: Pull Docker image from Docker Hub
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.get-latest-release.outputs.latest_release }}
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ needs.build.outputs.latest_release }}
       -
         name: Docker tag
-        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ steps.get-latest-release.outputs.latest_release }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ steps.get-latest-release.outputs.latest_release }}
+        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ needs.build.outputs.latest_release }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ needs.build.outputs.latest_release }}
       -
         name: Push Docker image to DigitalOcean
-        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ steps.get-latest-release.outputs.latest_release }}
+        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ needs.build.outputs.latest_release }}
       - 
         name: Remove old images from Container Registry
         run: doctl registry garbage-collection start --include-untagged-manifests --force project-devops
