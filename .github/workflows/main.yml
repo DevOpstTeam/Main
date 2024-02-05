@@ -77,8 +77,8 @@ jobs:
         name: latest release
         run: |
           set -x
-          latest_release=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | grep "tag_name" | cut -d '"' -f 4)
-          echo $latest_release >> $GITHUB_ENV
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+          echo $LATEST_RELEASE >> $GITHUB_ENV
       
       -
         name: Build and push
