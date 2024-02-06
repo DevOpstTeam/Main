@@ -128,7 +128,8 @@ jobs:
           buffer_size: 3
       -
         name: empty garbage
-        run: doctl registry garbage-collection start [--include-untagged-manifests] --force
+        run: doctl registry garbage-collection start --include-untagged-manifests --force
+
 
     
 
