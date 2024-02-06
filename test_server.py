@@ -1,10 +1,6 @@
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import Session
-from src.models.p2000Message import P2000Message as message
-from src.schemas.p2000Message import P2000MessageCreate, P2000Message
 
 from main import app
 from main import get_db
@@ -115,6 +111,3 @@ def test_filter():
     #test case with invalid priority
     response = client.get("/messages/filter/?priority=b")
     assert response.status_code == 422
-
-#set database to not local database
-seedLocal = False
