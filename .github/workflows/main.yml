@@ -2,7 +2,7 @@ name: cicd
 on:
   push:
     tags:
-      - V*
+      - v*
     
 jobs:
   test:
