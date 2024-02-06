@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: python-deploy
-        image: registry.digitalocean.com/project-devops/mathijs2002/devops:latest
+        image: placeholder_image
         ports:
         - containerPort: 8080
         resources:
