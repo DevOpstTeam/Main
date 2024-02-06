@@ -82,15 +82,15 @@ def delete_message(message_id: int, db = Depends(get_db)):
     db.delete(message)
     db.commit()
 
-@app.patch("/message/{message_id}")
-def update_message(message_id: int, newMessage: messageCreateSchema, db = Depends(get_db)):
+@app.put("/messages/{message_id}")
+def update_message(message_id: int, newMessage: messageCreateSchema, db = Depends(get_db)) -> messageSchema:
     """API endpoint for updating a message in the database.
     
     Parameters:
     message_id: the ID of the old message that you want to update.
     newMessage: the message that contains the new information.
     """
-    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
+    message = db.query(P2000Message).filter(P2000Message.id == message_id)
     message.update({P2000Message.Datum: newMessage.Datum,
                     P2000Message.Tijd: newMessage.Tijd,
                     P2000Message.ABP: newMessage.ABP,
@@ -98,6 +98,7 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
                     P2000Message.Regio: newMessage.Regio,
                     P2000Message.Capcode: newMessage.Capcode})
     db.commit()
+    return message
 
 @app.get("/messages/filter/")
 def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeStart: str | None = None, 
