@@ -12,12 +12,12 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from src.models.p2000Message import P2000Message
-from src.models.base import Base
-from src.alchemyDatabase import SessionLocal
+from models.p2000Message import P2000Message
+from models.base import Base
+from alchemyDatabase import SessionLocal
 from datetime import datetime
 
-seedLocal = False
+seedLocal = True
 
 P2000Regions = {1: "Groningen",
            2: "Friesland",

@@ -1,15 +1,26 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
 from src.models.p2000Message import P2000Message as message
 from src.schemas.p2000Message import P2000MessageCreate, P2000Message
-import src.dbSeeder
 
 from main import app
 from main import get_db
 
+engine = create_engine("sqlite:///test_messages.db")
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_test_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 #set database to local database
-seedLocal = True
+app.dependency_overrides[get_db] = get_test_db
 client = TestClient(app)
 
 def test_read_main():
@@ -29,12 +40,12 @@ def test_read_message_12():
     assert response.status_code == 200
     
     #check if found message has correct data   
-    assert response.json() == {'ABP': 'AMBU A2 Ambu 06154 VWS GROENLO Rit 24566 ',
-                               'Capcode': '0820154 MKA N-O Gelderland ( Ambulance 06-154 )\n',
-                               'Datum': '2022-01-24',
-                               'Prioriteit': 1,
+    assert response.json() == {'ABP': 'AMBU',
+                               'Capcode': '0820157',
+                               'Datum': '2024-02-06',
+                               'Prioriteit': 2,
                                'Regio': 'Noord en Oost Gelderland',
-                               'Tijd': '12:45:09',
+                               'Tijd': '11:03:03',
                                'id': 12}
 
 def test_non_existing():
@@ -43,25 +54,21 @@ def test_non_existing():
     assert response.status_code == 404
 
 def test_post_patch_delete():
-    #create test message
-    message_data = {
-         "Datum": "9999-02-16",
-         "Tijd": "12:33:12",
-         "ABP": "TEST",
-         "Prioriteit": 2,
-         "Regio": "TEST",
-         "Capcode": "999999",
-    }
-
     #post test message
-    response = client.post("/messages/", json=message_data)
+    response = client.post("/messages/", json={
+        'Datum':"9999-02-16",
+        'Tijd':"12:00:00",
+        'ABP':"TEST",
+        'Prioriteit':2,
+        'Regio':"TEST_REGIO",
+        'Capcode':"999999" 
+    })
     assert response.status_code == 201
     
-    #get data base and set message id
-    db: Session = next(get_db())
-    db_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
-    message_id = db_message.id
+    # get the message ID from the post response
+    db_message = response.json()
     assert db_message is not None
+    test_message_id = db_message["id"]
     
     # #create updated message
     # updated_message_data = {
@@ -85,11 +92,11 @@ def test_post_patch_delete():
     # assert updated_message.Capcode == updated_message_data["Capcode"]
 
     #delete test message
-    del_response = client.delete(f"/messages/{message_id}")
+    del_response = client.delete(f"/messages/{test_message_id}")
     assert del_response.status_code == 200 
     
     #make sure test message is gone
-    response_but_again = client.get(f"/messages/{message_id}") 
+    response_but_again = client.get(f"/messages/{test_message_id}") 
     assert response_but_again.status_code == 404
 
 def test_filter():
