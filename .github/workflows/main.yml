@@ -126,6 +126,10 @@ jobs:
         with:
           image_repository: mathijs2002/devops # required
           buffer_size: 3
+      -
+        name: empty garbage
+        run: doctl registry garbage-collection start --include-untagged-manifests --force
+
 
     
 
@@ -155,10 +159,10 @@ jobs:
         name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 python-api
       -
-        name: latest release
+        name: old release
         run: |
           set -x
-          OLD_RELEASE=$(kubectl get deployments python-deploy -o yaml | grep "image:" | cut -d '"' -f 4 )
+          OLD_RELEASE=$(kubectl get deployments python-deploy -o  yaml | grep "image:" | sed 's/^.*image:\s*//' | cut -d ' ' -f 2  )
           echo "OLD_RELEASE=$OLD_RELEASE" >> $GITHUB_ENV
       - 
         name: Update deployment file
@@ -174,7 +178,7 @@ jobs:
           sed -i 's|placeholder_passwd|${{ secrets.DB_PASSWORD }}|' $GITHUB_WORKSPACE/.config/deployment.yaml
       -
         name: update deployment file
-        run:  Kubectl set image deployments/python-api registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.OLD_RELEASE }}=registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
+        run:  kubectl set image deployment/python-deploy python-deploy=registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
       -
         name: Verify deployment
         run: kubectl rollout status deployment/python-deploy 
