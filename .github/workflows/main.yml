@@ -178,7 +178,7 @@ jobs:
           sed -i 's|placeholder_passwd|${{ secrets.DB_PASSWORD }}|' $GITHUB_WORKSPACE/.config/deployment.yaml
       -
         name: update deployment file
-        run:  Kubectl set image deployment/python-deploy python-deploy=registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
+        run:  kubectl set image deployment/python-deploy python-deploy=registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
       -
         name: Verify deployment
         run: kubectl rollout status deployment/python-deploy 
