@@ -126,6 +126,9 @@ jobs:
         with:
           image_repository: mathijs2002/devops # required
           buffer_size: 3
+      -
+        name: empty garbage
+        run: doctl registry garbage-collection start
 
     
 
