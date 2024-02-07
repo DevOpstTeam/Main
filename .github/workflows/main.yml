@@ -63,7 +63,7 @@ jobs:
         uses: actions/checkout@v2
 
       -
-        - name: Get commit message
+        name: Get commit message
         id: commit_message
         run: echo "::set-output name=message::$(git log --format=%B -n 1 ${{ github.sha }})"
 
