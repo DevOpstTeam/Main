@@ -30,7 +30,7 @@ def get_db():
 def read_root():
     """API root endpoint to check if the API is running."""
     """API root endpoint to check if the API is running."""
-    return {"0 down time cicd werkt!!"}
+    return {"0 down time cicd werkt!"}
 
 @app.get("/messages")
 def read_messages(db=Depends(get_db)) -> list[messageSchema]:
