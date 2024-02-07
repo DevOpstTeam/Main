@@ -8,8 +8,10 @@ from sqlalchemy.orm import sessionmaker
 from src.models.base import Base
 from src.models.p2000Message import P2000Message as message
 from src.schemas.p2000Message import P2000MessageCreate
+from src.schemas.p2000Message import P2000Message as messageSchema
+from datetime import date
 
-from main import app, get_db
+from main import app, get_db, update_message
 
 client = TestClient(app)
 
@@ -40,12 +42,12 @@ app.dependency_overrides[get_db] = get_test_db
 
 #create data for test message
 message_data = {
-         "Tijd": "12:33:12",
+         "Tijd": "11:33:12",
          "Datum": "9999-02-16",
          "Regio": "TEST",
          "ABP": "TEST",
          "Prioriteit": 2,
-         "Capcode": "999999"
+         "Capcode": "9998999"
     }
 
 def test_read_main():
@@ -88,43 +90,42 @@ def test_read_posted_message():
 
     #check if found message has correct data   
     assert response.json() == {
-                            "Tijd": "12:33:12",
+                            "Tijd": "11:33:12",
                             "Datum": "9999-02-16",
                             "Regio": "TEST",
                             "ABP": "TEST",
                             "Prioriteit": 2,
-                            "Capcode": "999999",
+                            "Capcode": "9998999",
                             "id": message_id}
     db.close()
 
-# modify test message
-# def test_patch():   
-#     #create updated message
-#     updated_message_data = {
-#         "Tijd": "12:33:12",
-#         "Datum": "9999-02-16",
-#         "Regio": "TEST",
-#         "ABP": "TEST_2",
-#         "Prioriteit": 2,
-#         "Capcode": "999999"
-#     }
+#modify test message
+def test_update_message():   
+    #find posted message in database
+    db: Session = next(get_test_db())
+    posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
+    assert posted_message is not None
 
-#     #find posted message in database
-#     db: Session = next(get_test_db())
-#     posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
-#     assert posted_message is not None
-#     message_id = posted_message.id
+    #create updated message
+    message_id = posted_message.id
+    updated_message_data = P2000MessageCreate(
+        Tijd="11:33:12",
+        Datum="1999-02-06",
+        Regio="TEST",
+        ABP="TEST_2",
+        Prioriteit=2,
+        Capcode="9998999"
+    )
 
-#     #modify test message
-#     patch_response = client.patch(f"/messages/{message_id}", json=updated_message_data)
-#     assert patch_response.status_code == 200
+    #modify test message
+    updated_message =update_message(message_id=message_id, newMessage=updated_message_data, db=db)
     
-#     #update database 
-#     db: Session = next(get_test_db())
-#     updated_message = db.query(message).filter_by(Capcode=updated_message_data["Capcode"]).first()
-#     assert updated_message is not None
-#     assert updated_message.ABP == updated_message_data["ABP"]
-#     assert updated_message.Capcode == updated_message_data["Capcode"]
+    #update database 
+    db: Session = next(get_test_db())
+    updated_message = db.query(message).filter_by(Capcode=updated_message_data.Capcode).first()
+    assert updated_message is not None
+    assert updated_message.ABP == updated_message_data.ABP
+    assert updated_message.Capcode == updated_message_data.Capcode
 
 def test_delete():
     #find posted message in database
