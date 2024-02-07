@@ -8,8 +8,6 @@ from sqlalchemy.orm import sessionmaker
 from src.models.base import Base
 from src.models.p2000Message import P2000Message as message
 from src.schemas.p2000Message import P2000MessageCreate
-from src.schemas.p2000Message import P2000Message as messageSchema
-from datetime import date
 
 from main import app, get_db, update_message
 
