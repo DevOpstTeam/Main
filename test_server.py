@@ -65,14 +65,7 @@ def test_non_existing():
 
 def test_post_message():
     #post test message
-    response = client.post("/messages/", json={
-        'Datum':"9999-02-16",
-        'Tijd':"12:00:00",
-        'ABP':"TEST",
-        'Prioriteit':2,
-        'Regio':"TEST_REGIO",
-        'Capcode':"999999" 
-    })
+    response = client.post("/messages/", json=message_data)
     assert response.status_code == 201
     
     #check in database
@@ -81,7 +74,7 @@ def test_post_message():
     assert posted_message is not None
     db.close()
 
-def test_read_posted_message():   
+def test_read_posted_message():    
     #find posted message in database
     db: Session = next(get_test_db())
     posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
@@ -130,6 +123,7 @@ def test_update_message():
     assert updated_message is not None
     assert updated_message.ABP == updated_message_data.ABP
     assert updated_message.Capcode == updated_message_data.Capcode
+    db.close()
 
 def test_delete():
     #find posted message in database
