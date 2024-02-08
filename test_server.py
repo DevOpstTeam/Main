@@ -43,7 +43,7 @@ message_data = {
          "Datum": "9999-02-16",
          "Regio": "TEST",
          "ABP": "TEST",
-         "Prioriteit": 2,
+         "Prioriteit": 3,
          "Capcode": "9998999"
     }
 
