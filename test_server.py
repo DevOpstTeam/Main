@@ -96,14 +96,13 @@ def test_read_posted_message():
                             "id": message_id}
     db.close()
 
-#modify test message
 def test_update_message():   
     #find posted message in database
     db: Session = next(get_test_db())
     posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
     assert posted_message is not None
 
-    #create updated message
+    #modify test message
     message_id = posted_message.id
     updated_message_data = P2000MessageCreate(
         Tijd="11:33:12",
