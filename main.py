@@ -16,6 +16,7 @@ from src.alchemyDatabase import SessionLocal
 from datetime import datetime
 
 app = FastAPI()
+default_message = "0 down time cicd werkt!" #returned on "/" endpoint
 
 def get_db():
     """Get a reference to the database and close the database when finished."""
@@ -30,7 +31,7 @@ def get_db():
 def read_root():
     """API root endpoint to check if the API is running."""
     """API root endpoint to check if the API is running."""
-    return {"0 down time cicd werkt!"}
+    return default_message
 
 @app.get("/messages")
 def read_messages(db=Depends(get_db)) -> list[messageSchema]:
@@ -133,7 +134,6 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
                     P2000Message.Capcode: newMessage.Capcode})
     db.commit()
     return message
-    return message
 
 @app.get("/messages/filter/")
 def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, timeStart: str | None = None, 
@@ -182,21 +182,6 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
         if dateEnd != None:
             endDate = datetime.strptime(dateEnd, dateFormat)
             messages = messages.filter(P2000Message.Datum <= endDate)
-        if timeStart != None:
-            messages = messages.filter(P2000Message.Tijd > timeStart)
-        if timeEnd != None:
-            messages = messages.filter(P2000Message.Tijd < timeEnd)
-        if abp != None:
-            messages = messages.filter(P2000Message.ABP.contains(abp))
-        if priority != None:
-            messages = messages.filter(P2000Message.Prioriteit == priority)
-        if region != None:
-            messages = messages.filter(P2000Message.Regio.contains(region))
-        if capcode != None:
-            messages = messages.filter(P2000Message.Capcode.contains(capcode))
-    except Exception as e:
-        print(e)
-        return list()
         if timeStart != None:
             messages = messages.filter(P2000Message.Tijd > timeStart)
         if timeEnd != None:
