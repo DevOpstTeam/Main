@@ -16,6 +16,7 @@ from src.alchemyDatabase import SessionLocal
 from datetime import datetime
 
 app = FastAPI()
+default_message = "0 down time cicd werkt!" #returned on "/" endpoint
 
 def get_db():
     """Get a reference to the database and close the database when finished."""
@@ -30,7 +31,7 @@ def get_db():
 def read_root():
     """API root endpoint to check if the API is running."""
     """API root endpoint to check if the API is running."""
-    return {"0 down time cicd werkt!"}
+    return default_message
 
 @app.get("/messages")
 def read_messages(db=Depends(get_db)) -> list[messageSchema]:

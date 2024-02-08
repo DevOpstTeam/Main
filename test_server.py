@@ -8,7 +8,7 @@ from src.models.base import Base
 from src.models.p2000Message import P2000Message as message
 from src.schemas.p2000Message import P2000MessageCreate
 
-from main import app, get_db, update_message
+from main import app, default_message, get_db, update_message
 
 client = TestClient(app)
 
@@ -51,7 +51,7 @@ def test_read_main():
     #get default message
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == ['0 down time cicd werkt!']
+    assert response.json() == default_message
 
 def test_read_messages():
     #get all messages
