@@ -146,11 +146,15 @@ def test_filter():
     assert response.status_code == 200
 
     #test case with only dateStart parameter
-    response = client.get("/messages/filter/?dateStart=01-01-2023")
+    response = client.get("/messages/filter/?dateStart=01-01-2024")
     assert response.status_code == 200
 
     #test case with dateStart + priority
-    response = client.get("/messages/filter/?dateStart=02-01-2023&priority=2")
+    response = client.get("/messages/filter/?capcode=0920113&priority=1")
+    assert response.status_code == 200
+
+    #test case with only dateStart parameter
+    response = client.get("/messages/filter/?dateStart=01-02-2024&dateEnd=01-01-2024")
     assert response.status_code == 200
 
     #test case with invalid priority
