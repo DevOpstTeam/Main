@@ -87,12 +87,12 @@ def test_read_posted_message():
 
     #check if found message has correct data   
     assert response.json() == {
-                            "Tijd": "11:33:12",
-                            "Datum": "9999-02-16",
-                            "Regio": "TEST",
-                            "ABP": "TEST",
-                            "Prioriteit": 2,
-                            "Capcode": "9998999",
+                            "Tijd": message_data["Tijd"],
+                            "Datum": message_data["Datum"],
+                            "Regio": message_data["Regio"],
+                            "ABP": message_data["ABP"],
+                            "Prioriteit": message_data["Prioriteit"],
+                            "Capcode": message_data["Capcode"],
                             "id": message_id}
     db.close()
 
