@@ -83,7 +83,7 @@ def test_read_posted_message():
 
     #get message just posted
     response = client.get(f"/messages/{message_id}")
-    assert response.status_code == 200
+    assert response.status_code == 200 
 
     #check if found message has correct data   
     assert response.json() == {
