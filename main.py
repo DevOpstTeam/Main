@@ -130,7 +130,6 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
                     P2000Message.ABP: newMessage.ABP,
                     P2000Message.Prioriteit: newMessage.Prioriteit,
                     P2000Message.Regio: newMessage.Regio,
-                    P2000Message.Datum: newMessage.Datum,
                     P2000Message.Capcode: newMessage.Capcode})
     db.commit()
     return message
