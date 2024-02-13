@@ -159,4 +159,4 @@ def test_filter():
 
     #test case with invalid priority
     response = client.get("/messages/filter/?priority=b")
-    assert response.status_code == 422
+    assert response.status_code == 422 
