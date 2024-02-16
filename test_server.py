@@ -118,14 +118,14 @@ def test_update_message():
     
     #update database 
     db: Session = next(get_test_db())
-    updated_message = db.query(message).filter_by(Capcode=updated_message_data.Capcode).first()
+    updated_message = db.query(message).filter_by(id=message_id).first()
     assert updated_message is not None
     assert updated_message.ABP == updated_message_data.ABP
     assert updated_message.Capcode == updated_message_data.Capcode
     db.close()
 
 def test_delete():
-    #find posted message in database
+    #find posted message in databases
     db: Session = next(get_test_db())
     posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
     assert posted_message is not None
