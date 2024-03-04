@@ -30,7 +30,7 @@ spec:
         - name: MYSQL_PORT
           value: "25060"
         - name: MYSQL_DB
-          value: "p2000"
+          value: "p2000_rapportage"
         - name: MYSQL_PASSWORD
           value: "placeholder_passwd"
 ---
