@@ -140,7 +140,7 @@ jobs:
         name: DigitalOcean Container Registry Remove
         uses: ripplr-io/docr-image-remove@v1
         with:
-          image_repository: mathijs2002/devops # required
+          image_repository: api # required
           buffer_size: 3
       -
         name: empty garbage
