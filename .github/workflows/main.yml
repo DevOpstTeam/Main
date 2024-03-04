@@ -135,7 +135,7 @@ jobs:
         run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.LATEST_RELEASE }} registry.digitalocean.com/devops-api:${{ env.LATEST_RELEASE }}
       -
         name: Push Docker image to DigitalOcean
-        run: docker push registry.digitalocean.com/devops-api:${{ env.LATEST_RELEASE }} 
+        run: docker push registry.digitalocean.com/devops-api/${{ env.LATEST_RELEASE }} 
       - 
         name: DigitalOcean Container Registry Remove
         uses: ripplr-io/docr-image-remove@v1
