@@ -15,7 +15,7 @@ spec:
         app: python-deploy
     spec:
       containers:
-      - name: python-deploy
+      - name: api
         image: placeholder_image
         ports:
         - containerPort: 8080
