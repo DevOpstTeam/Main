@@ -132,10 +132,10 @@ jobs:
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.LATEST_RELEASE }}
       -
         name: Docker tag
-        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.LATEST_RELEASE }} registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
+        run: docker tag ${{ secrets.DOCKER_USERNAME }}/devops:${{ env.LATEST_RELEASE }} registry.digitalocean.com/devops-api:${{ env.LATEST_RELEASE }}
       -
         name: Push Docker image to DigitalOcean
-        run: docker push registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }} 
+        run: docker push registry.digitalocean.com/devops-api:${{ env.LATEST_RELEASE }} 
       - 
         name: DigitalOcean Container Registry Remove
         uses: ripplr-io/docr-image-remove@v1
@@ -177,7 +177,7 @@ jobs:
       - 
         name: Update deployment file
         run: |
-            sed -i 's|placeholder_image|registry.digitalocean.com/project-devops/mathijs2002/devops/${{ env.LATEST_RELEASE }}|' $GITHUB_WORKSPACE/.config/deployment.yaml
+            sed -i 's|placeholder_image|registry.digitalocean.com/devops-api/${{ env.LATEST_RELEASE }}|' $GITHUB_WORKSPACE/.config/deployment.yaml
       - 
         name: Update deployment file
         run: |
@@ -188,7 +188,7 @@ jobs:
           sed -i 's|placeholder_passwd|${{ secrets.DB_PASSWORD }}|' $GITHUB_WORKSPACE/.config/deployment.yaml
       -
         name: update deployment file
-        run:  kubectl set image deployment/python-deploy python-deploy=registry.digitalocean.com/project-devops/mathijs2002/devops:${{ env.LATEST_RELEASE }}
+        run:  kubectl set image deployment/python-deploy python-deploy=registry.digitalocean.com/devops-api:${{ env.LATEST_RELEASE }}
       -
         name: Verify deployment
         run: kubectl rollout status deployment/python-deploy 
