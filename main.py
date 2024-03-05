@@ -99,12 +99,11 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     Returns:
     A P2000 message.
     """
-    db_message = P2000Message(Datum=message.Datum,
-                              Tijd=message.Tijd,
-                              ABP=message.ABP,
-                              Prioriteit=message.Prioriteit,
-                              Regio=message.Regio,
-                              Capcode=message.Capcode)
+    db_message = P2000Message(datum=message.datum,
+                              tijd=message.tijd,
+                              abp_id=message.abp_id,
+                              prioriteit=message.prioriteit,
+                              regio_id=message.regio_id)
     db.add(db_message)
     db.commit()
     db.refresh(db_message)
@@ -120,7 +119,7 @@ def read_message(message_id: int, db=Depends(get_db)) -> messageSchema:
     Returns:
     A P2000 message.
     """
-    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
+    message = db.query(P2000Message).filter(P2000Message.melding_id == message_id).first()
     if message == None:
         raise HTTPException(status_code=404, detail=f'message with ID {message_id} not found')
     return message
@@ -132,7 +131,7 @@ def delete_message(message_id: int, db = Depends(get_db)):
     Parameters:
     message_id: the ID of the message you want to delete from the database.
     """
-    message = db.query(P2000Message).filter(P2000Message.id == message_id).first()
+    message = db.query(P2000Message).filter(P2000Message.melding_id == message_id).first()
     db.delete(message)
     db.commit()
 
@@ -144,13 +143,12 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
     message_id: the ID of the old message that you want to update.
     newMessage: the message that contains the new information.
     """
-    message = db.query(P2000Message).filter(P2000Message.id == message_id)
-    message.update({P2000Message.Datum: newMessage.Datum,
-                    P2000Message.Tijd: newMessage.Tijd,
-                    P2000Message.ABP: newMessage.ABP,
-                    P2000Message.Prioriteit: newMessage.Prioriteit,
-                    P2000Message.Regio: newMessage.Regio,
-                    P2000Message.Capcode: newMessage.Capcode})
+    message = db.query(P2000Message).filter(P2000Message.melding_id == message_id)
+    message.update({P2000Message.datum: newMessage.datum,
+                    P2000Message.tijd: newMessage.tijd,
+                    P2000Message.abp_id: newMessage.abp_id,
+                    P2000Message.prioriteit: newMessage.prioriteit,
+                    P2000Message.regio_id: newMessage.regio_id})
     db.commit()
     return message
 
