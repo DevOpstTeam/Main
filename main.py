@@ -6,6 +6,7 @@ This script creates an API using FastAPI that will interact with a P2000 databas
 from fastapi import FastAPI, HTTPException, Depends
 from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
+from src.schemas.p2000Message import Regio as regionSchema
 from src.models.p2000Message import Meldingen as P2000Message
 from src.models.p2000Message import ABP
 from src.models.p2000Message import Regio
@@ -153,7 +154,7 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
     return message
 
 @app.get("/safest")
-def get_safest_region(inverted: bool | None = None, db = Depends(get_db)):
+def get_safest_region(inverted: bool | None = None, db = Depends(get_db)) -> dict:
     # Get all the regions & messages
     messages = db.query(P2000Message)
     regions = db.query(Regio)

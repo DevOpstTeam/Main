@@ -20,7 +20,7 @@ class ABP(Base):
 #Meldingen model
 class Meldingen(Base):
     __tablename__ = 'meldingen'
-    melding_id = Column(Integer, primary_key=True)
+    melding_id = Column(Integer, primary_key=True, autoincrement=True)
     regio_id = Column(Integer, ForeignKey('regio.regio_id'))
     abp_id = Column(Integer, ForeignKey('abp.abp_id'))
     prioriteit = Column(Integer)
