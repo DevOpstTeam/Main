@@ -7,6 +7,8 @@ from fastapi import FastAPI, HTTPException, Depends
 from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
 from src.models.p2000Message import Meldingen as P2000Message
+from src.models.p2000Message import ABP
+from src.models.p2000Message import Regio
 from src.alchemyDatabase import SessionLocal
 from datetime import datetime
 
@@ -65,11 +67,20 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
         if timeEnd != None:
             messages = messages.filter(P2000Message.Tijd < timeEnd)
         if abp != None:
-            messages = messages.filter(P2000Message.ABP.contains(abp))
+            # Check which ABP ID matches the abp query value
+            abpTable = db.query(ABP)
+            abpID = abpTable.filter(ABP.abp_naam == abp).first().abp_id
+
+            # Filter the message on the correct abp ID
+            messages = messages.filter(P2000Message.abp_id == abpID)
         if priority != None:
-            messages = messages.filter(P2000Message.Prioriteit == priority)
+            messages = messages.filter(P2000Message.prioriteit == priority)
         if region != None:
-            messages = messages.filter(P2000Message.Regio.contains(region))
+            # Check which region ID matches the region query value
+            regionTable = db.query(Regio)
+            regionId = regionTable.filter(Regio.regio_naam.contains(region)).first().regio_id
+
+            messages = messages.filter(P2000Message.regio_id == regionId)
         if capcode != None:
             messages = messages.filter(P2000Message.Capcode.contains(capcode))
     except Exception as e:
