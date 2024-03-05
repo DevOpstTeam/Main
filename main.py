@@ -56,17 +56,17 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
         dateFormat = "%d-%M-%Y"
         if dateStart != None:
             startDate = datetime.strptime(dateStart, dateFormat)
-            messages = messages.filter(P2000Message.Datum >= startDate)
+            messages = messages.filter(P2000Message.datum >= startDate)
         if dateStart != None:
             startDate = datetime.strptime(dateStart, dateFormat)
-            messages = messages.filter(P2000Message.Datum >= startDate)
+            messages = messages.filter(P2000Message.datum >= startDate)
         if dateEnd != None:
             endDate = datetime.strptime(dateEnd, dateFormat)
-            messages = messages.filter(P2000Message.Datum <= endDate)
+            messages = messages.filter(P2000Message.datum <= endDate)
         if timeStart != None:
-            messages = messages.filter(P2000Message.Tijd > timeStart)
+            messages = messages.filter(P2000Message.tijd > timeStart)
         if timeEnd != None:
-            messages = messages.filter(P2000Message.Tijd < timeEnd)
+            messages = messages.filter(P2000Message.tijd < timeEnd)
         if abp != None:
             # Check which ABP ID matches the abp query value
             abpTable = db.query(ABP)
@@ -154,16 +154,20 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
     return message
 
 @app.get("/safest")
-def get_safest_region(inverted: bool | None = None, db = Depends(get_db)) -> dict:
+def get_safest_region(inverted: bool | None = None, dateStart: str | None = None, dateEnd: str | None = None,
+                      timeStart: str | None = None, timeEnd: str | None = None, db = Depends(get_db)) -> dict:
     # Get all the regions & messages
-    messages = db.query(P2000Message)
+    messages = filter_messages(dateStart=dateStart, dateEnd=dateEnd, timeStart=timeStart, timeEnd=timeEnd, db=db)
     regions = db.query(Regio)
 
     # Create a dictionary with every region and the amount of messages for that region
     safestRegions = {regio.regio_naam: 0 for regio in regions.all()}
-    # Fill the dictionary
     for region in regions:
-        amountOfMessages = len(messages.filter(P2000Message.regio_id == region.regio_id).all())
+        # amountOfMessages = len(messages.filter(P2000Message.regio_id == region.regio_id).all())
+        amountOfMessages = 0
+        for message in messages:
+            if message.regio_id == region.regio_id:
+                amountOfMessages += 1
         safestRegions[region.regio_naam] = amountOfMessages
     
     # Return the sorted dictionary

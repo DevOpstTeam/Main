@@ -91,13 +91,12 @@ try:
                 services = tryElement(element, ".poli")
                 abpID = 3
 
-        msgCapCodes = ""
         for capCode in capCodes:
-            # msgCapCodes += capCode.text + "-"
-            msgCapCodes += capCode.text
-            break   # database value is only 100 characters
+            splitPoint = capCode.text.index(" ")
+            code = capCode.text[:8]
+            info = capCode.text[8:]
+            # Add CapCodes?
 
-        info = msgCapCodes[8:]
         regionId = int(msgRegion)
         if regionId > 25:
             # Above 25 are weird regions...
