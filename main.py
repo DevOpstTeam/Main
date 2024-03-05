@@ -71,7 +71,7 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
             abpTable = db.query(ABP)
             abpID = abpTable.filter(ABP.abp_naam == abp).first().abp_id
 
-            # Filter the message on the correct abp ID
+            # Filter the messages on the correct abp ID
             messages = messages.filter(P2000Message.abp_id == abpID)
         if priority != None:
             messages = messages.filter(P2000Message.prioriteit == priority)
@@ -80,6 +80,7 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
             regionTable = db.query(Regio)
             regionId = regionTable.filter(Regio.regio_naam.contains(region)).first().regio_id
 
+            # Filter the messages on the correct region ID
             messages = messages.filter(P2000Message.regio_id == regionId)
         if capcode != None:
             messages = messages.filter(P2000Message.Capcode.contains(capcode))
@@ -152,3 +153,23 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
                     P2000Message.Capcode: newMessage.Capcode})
     db.commit()
     return message
+
+@app.get("/safest")
+def get_safest_region(inverted: bool | None = None, db = Depends(get_db)):
+    # Get all the regions & messages
+    messages = db.query(P2000Message)
+    regions = db.query(Regio)
+
+    # Create a dictionary with every region and the amount of messages for that region
+    safestRegions = {regio.regio_naam: 0 for regio in regions.all()}
+    # Fill the dictionary
+    for region in regions:
+        amountOfMessages = len(messages.filter(P2000Message.regio_id == region.regio_id).all())
+        safestRegions[region.regio_naam] = amountOfMessages
+    
+    # Return the sorted dictionary
+    sortedRegions = sorted(safestRegions.items(), key=lambda item: item[1])
+    if inverted:
+        return dict(sortedRegions)
+    else:
+        return dict(reversed(sortedRegions))
