@@ -12,12 +12,12 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models.p2000Message import P2000Message
+from models.p2000Message import Meldingen as P2000Message
 from models.base import Base
 from alchemyDatabase import SessionLocal
 from datetime import datetime
 
-seedLocal = True
+seedLocal = False
 
 P2000Regions = {1: "Groningen",
            2: "Friesland",
@@ -83,10 +83,13 @@ try:
 
         capCodes = element.find_elements(By.CSS_SELECTOR, ".capcodes")
         services = tryElement(element, ".ambu")
+        abpID = 1
         if len(services) <= 0:
             services = tryElement(element, ".bran")
+            abpID = 2
             if len(services) <= 0:
                 services = tryElement(element, ".poli")
+                abpID = 3
 
         msgCapCodes = ""
         for capCode in capCodes:
@@ -95,13 +98,18 @@ try:
             break   # database value is only 100 characters
 
         info = msgCapCodes[8:]
+        regionId = int(msgRegion)
+        if regionId > 25:
+            # Above 25 are weird regions...
+            continue
 
-        msg = P2000Message(Tijd=msgTime, 
-                           Datum=datetime.strptime(msgDate, "%d-%m-%y"), 
-                           Regio=P2000Regions[int(msgRegion)], 
-                           Prioriteit=2,
-                           ABP=services.split(" ")[0], 
-                           Capcode=msgCapCodes.split(" ")[0])
+        msg = P2000Message(tijd=msgTime, 
+                           datum=datetime.strptime(msgDate, "%d-%m-%y"), 
+                           regio_id=regionId, 
+                           prioriteit=1,
+                           abp_id=abpID,
+                        #    Capcode=msgCapCodes.split(" ")[0])
+        )
         P2000Messages.append(msg)
         print('.', end="")
 except:
@@ -119,7 +127,7 @@ except:
     db.commit()
 
     for message in db.query(P2000Message).all():
-        print(f'\t[Message]\n{message.Datum}\n{message.Tijd}\n{message.ABP}\n{message.Prioriteit}\n{message.Regio}\n{message.Capcode}\n')
+        print(f'\t[Message]\n{message.datum}\n{message.tijd}\n{message.abp_id}\n{message.prioriteit}\n{message.regio_id}\n')
 
     db.close()
 

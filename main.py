@@ -170,6 +170,6 @@ def get_safest_region(inverted: bool | None = None, db = Depends(get_db)):
     # Return the sorted dictionary
     sortedRegions = sorted(safestRegions.items(), key=lambda item: item[1])
     if inverted:
-        return dict(sortedRegions)
-    else:
         return dict(reversed(sortedRegions))
+    else:
+        return dict(sortedRegions)
