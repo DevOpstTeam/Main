@@ -6,24 +6,16 @@ This script creates an API using FastAPI that will interact with a P2000 databas
 from fastapi import FastAPI, HTTPException, Depends
 from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
-from src.models.p2000Message import P2000Message
+from src.models.p2000Message import Meldingen as P2000Message
 from src.alchemyDatabase import SessionLocal
 from datetime import datetime
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
 default_message = "0 down time cicd werkt!" #returned on "/" endpoint  
 
 def get_db():
     """Get a reference to the database and close the database when finished."""
-    # db = SessionLocal()
-
-    # Test db
-    engine = create_engine("sqlite:///test_messages.db")
-    testSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    db = testSession()
+    db = SessionLocal()
 
     try:
         yield db
