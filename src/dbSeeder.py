@@ -6,15 +6,10 @@ Can also create a local database by setting the seedLocal variable to True.
 This script makes use of the selenium driver to scrape the 
 https://m.livep2000.nl/ website for p2000 messages.
 """
-import os
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-# from webdriver_manager.firefox import GeckoDriverManager
-from selenium.webdriver.firefox.service import Service
-
+# from webdriver_manager.chrome import ChromeDriverManager
+import random
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
@@ -27,43 +22,10 @@ from datetime import datetime
 
 seedLocal = False
 
-P2000Regions = {1: "Groningen",
-           2: "Friesland",
-           3: "Drenthe",
-           4: "Ijsselland",
-           5: "Twente",
-           6: "Noord en Oost Gelderland",
-           7: "Gelderland Midden",
-           8: "Gelderland Zuid",
-           9: "Utrecht",
-           10: "Noord-Holland Noord",
-           11: "Zaanstreek-Waterland",
-           12: "Kennemerland",
-           13: "Amsterdam-Amstelland",
-           14: "Gooi en Vechtstreek",
-           15: "Haaglanden",
-           16: "Hollands Midden",
-           17: "Rotterdam Rijnmond",
-           18: "Zuid-Holland",
-           19: "Zeeland",
-           20: "Midden- en West-Brabant",
-           21: "Brabant Noord",
-           22: "Brabant Zuid en Oost",
-           23: "Limburg Noord",
-           24: "Limburg Zuid",
-           25: "Flevoland"}
-
-P2000Messages = list()
-
-os.environ['WDM_LOCAL'] = '1'
-os.environ['WDM_CACHE_DIR'] = '/tmp/.wdm'
 options = webdriver.ChromeOptions()
 options.page_load_strategy = 'none'
-options.add_argument("--headless")  # Voert Firefox uit in headless modus
-options.add_argument("--disable-gpu")  # Deze optie is soms nodig voor Firefox in headless modus
-options.add_argument("--no-sandbox")  # Deze optie wordt aanbevolen voor het uitvoeren van Firefox in container-omgevingen
-options.add_argument("--disable-dev-shm-usage")
-# Firefox heeft geen direct equivalent van page_load_strategy 'none', dus die lijn wordt weggelaten
+options.add_argument("--headless") # Voert chrome uit in headless modus
+options.page_load_strategy = "none"
 
 # Initialiseren van de Chrome driver
 driver = Chrome(options=options)
@@ -107,6 +69,8 @@ def get_abp(abp_name):
     output = abp
     abp = output[0]
     return abp
+def get_prio():
+     return random.randint(1, 3)
 
 
 
@@ -130,12 +94,13 @@ try:
 
         regio_id = int(msgRegion)
         abp_id = get_abp(services)
+        prio = get_prio()
         
 
         melding = Meldingen(
             regio_id=regio_id,
             abp_id=abp_id,
-            prioriteit=2,
+            prioriteit=prio,
             datum=msgDate,
             tijd=msgTime
         )
