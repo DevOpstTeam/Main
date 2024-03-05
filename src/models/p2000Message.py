@@ -1,14 +1,31 @@
 """ Pydantic models for the P2000 database. """
 
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from .base import Base
 
-class P2000Message(Base):
-    __tablename__ = "site_meldingen"
-    id = Column(Integer, primary_key=True, index=True)
-    Datum = Column(Date)
-    Tijd = Column(String)
-    ABP = Column(String)
-    Prioriteit = Column(Integer)
-    Regio = Column(String)
-    Capcode = Column(String)
+#Regio model
+class Regio(Base):
+    __tablename__ = 'regio'
+    regio_id = Column(Integer, primary_key=True, autoincrement=True)
+    regio_naam = Column(String(255), nullable=False)
+
+#ABP model
+class ABP(Base):
+    __tablename__ = 'abp'
+    abp_id = Column(Integer, primary_key=True, autoincrement=True)
+    abp_naam = Column(String(255), nullable=False)
+
+#Meldingen model
+class Meldingen(Base):
+    __tablename__ = 'meldingen'
+    melding_id = Column(Integer, primary_key=True, autoincrement=True)
+    regio_id = Column(Integer, ForeignKey('regio.regio_id'))
+    abp_id = Column(Integer, ForeignKey('abp.abp_id'))
+    prioriteit = Column(Integer)
+    datum = Column(String(255))
+    tijd = Column(String(255))
+    #Relaties opzetten
+    regio = relationship("Regio")
+    abp = relationship("ABP")

@@ -11,7 +11,7 @@ This script creates an API using FastAPI that will interact with a P2000 databas
 from fastapi import FastAPI, HTTPException, Depends
 from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
-from src.models.p2000Message import P2000Message
+from src.models.p2000Message import Meldingen
 from src.alchemyDatabase import SessionLocal
 from datetime import datetime
 
@@ -45,7 +45,7 @@ def read_messages(db=Depends(get_db)) -> list[messageSchema]:
     Returns:
     List of P2000 messages.
     """
-    messages = db.query(P2000Message).all()
+    messages = db.query(Meldingen).all()
     return messages
 
 @app.post("/messages/", status_code=201)
@@ -66,12 +66,12 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     Returns:
     A P2000 message.
     """
-    db_message = P2000Message(Datum=message.Datum,
-                              Tijd=message.Tijd,
-                              ABP=message.ABP,
-                              Prioriteit=message.Prioriteit,
-                              Regio=message.Regio,
-                              Capcode=message.Capcode)
+    db_message = message(Datum=message.datum,
+                              Tijd=message.tijd,
+                              ABP=message.abp_id,
+                              Prioriteit=message.prioriteit,
+                              Regio=message.regio_id,
+                              )
     db.add(db_message)
     db.commit()
     db.refresh(db_message)

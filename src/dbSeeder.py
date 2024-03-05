@@ -6,18 +6,26 @@ Can also create a local database by setting the seedLocal variable to True.
 This script makes use of the selenium driver to scrape the 
 https://m.livep2000.nl/ website for p2000 messages.
 """
+import os
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models.p2000Message import P2000Message
+from models.p2000Message import Regio,ABP,Meldingen
+from schemas.p2000Message import P2000MessageCreate, P2000MessageBase, P2000Message
 from models.base import Base
 from alchemyDatabase import SessionLocal
 from datetime import datetime
 
-seedLocal = True
+seedLocal = False
 
 P2000Regions = {1: "Groningen",
            2: "Friesland",
@@ -47,13 +55,25 @@ P2000Regions = {1: "Groningen",
 
 P2000Messages = list()
 
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")
-options.page_load_strategy = "none"
+os.environ['WDM_LOCAL'] = '1'
+os.environ['WDM_CACHE_DIR'] = '/tmp/.wdm'
+options = FirefoxOptions()
+options.add_argument("--headless")  # Voert Firefox uit in headless modus
+options.add_argument("--disable-gpu")  # Deze optie is soms nodig voor Firefox in headless modus
+options.add_argument("--no-sandbox")  # Deze optie wordt aanbevolen voor het uitvoeren van Firefox in container-omgevingen
+options.add_argument("--disable-dev-shm-usage")
+# Firefox heeft geen direct equivalent van page_load_strategy 'none', dus die lijn wordt weggelaten
 
-driver = Chrome(options=options)
+# Initialiseren van de Firefox driver met de bovenstaande opties
+driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+
+# Stel een impliciete wachttijd in
 driver.implicitly_wait(5)
+
+# Ga naar de website
 driver.get("https://m.livep2000.nl/")
+
+
 
 def tryElement(element, cssSelector):
     """Try to search an html element for anything that matches the CSS Selector.
@@ -75,34 +95,46 @@ def tryElement(element, cssSelector):
         return ""
 
 content = driver.find_elements(By.CSS_SELECTOR, ".line")
+
+def get_or_create_region(session, region_name):
+    region = session.query(Regio).filter(Regio.regio_naam == region_name).first()
+    if not region:
+        region = Regio(regio_naam=region_name)
+        session.add(region)
+        session.commit()
+    return region.regio_id
+
+def get_or_create_abp(session, abp_name):
+    abp = session.query(ABP).filter(ABP.abp_naam == abp_name).first()
+    if not abp:
+        abp = ABP(abp_naam=abp_name)
+        session.add(abp)
+        session.commit()
+    return abp.abp_id
+
 try:
+    content = driver.find_elements(By.CSS_SELECTOR, ".line")
     for element in content:
         msgTime = element.find_element(By.CSS_SELECTOR, ".time").text
         msgDate = element.find_element(By.CSS_SELECTOR, ".date").text
         msgRegion = element.find_element(By.CSS_SELECTOR, ".regio").text
 
-        capCodes = element.find_elements(By.CSS_SELECTOR, ".capcodes")
         services = tryElement(element, ".ambu")
         if len(services) <= 0:
             services = tryElement(element, ".bran")
             if len(services) <= 0:
                 services = tryElement(element, ".poli")
 
-        msgCapCodes = ""
-        for capCode in capCodes:
-            # msgCapCodes += capCode.text + "-"
-            msgCapCodes += capCode.text
-            break   # database value is only 100 characters
+        regio_id = get_or_create_region(session, msgRegion)
+        abp_id = get_or_create_abp(session, info)
 
-        info = msgCapCodes[8:]
-
-        msg = P2000Message(Tijd=msgTime, 
-                           Datum=datetime.strptime(msgDate, "%d-%m-%y"), 
-                           Regio=P2000Regions[int(msgRegion)], 
-                           Prioriteit=2,
-                           ABP=services.split(" ")[0], 
-                           Capcode=msgCapCodes.split(" ")[0])
-        P2000Messages.append(msg)
+        melding = Meldingen(
+            regio_id=regio_id,
+            abp_id=abp_id,
+            prioriteit=2,
+            datum=msgDate,
+            tijd=msgTime
+        )
         print('.', end="")
 except:
     # At some point, selenium just fails for this website (because the website auto updates)
@@ -115,11 +147,11 @@ except:
     else:
         db = SessionLocal()
 
-    db.add_all(P2000Messages)
+    db.add(melding)
     db.commit()
 
-    for message in db.query(P2000Message).all():
-        print(f'\t[Message]\n{message.Datum}\n{message.Tijd}\n{message.ABP}\n{message.Prioriteit}\n{message.Regio}\n{message.Capcode}\n')
+    for message in db.query().all():
+        print(f'\t[Message]\n{message.Datum}\n{message.Tijd}\n{message.ABP}\n{message.Prioriteit}\n{message.Regio}')
 
     db.close()
 
