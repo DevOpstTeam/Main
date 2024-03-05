@@ -97,21 +97,21 @@ def tryElement(element, cssSelector):
 
 content = driver.find_elements(By.CSS_SELECTOR, ".line")
 
-def get_or_create_region(session, region_name):
-    region = session.query(Regio).filter(Regio.regio_naam == region_name).first()
-    if not region:
-        region = Regio(regio_naam=region_name)
-        session.add(region)
-        session.commit()
-    return region.regio_id
+Session = SessionLocal()
+print(Session.query(ABP.abp_naam).all())
 
-def get_or_create_abp(session, abp_name):
-    abp = session.query(ABP).filter(ABP.abp_naam == abp_name).first()
-    if not abp:
-        abp = ABP(abp_naam=abp_name)
-        session.add(abp)
-        session.commit()
-    return abp.abp_id
+   
+
+def get_abp(abp_name):
+    abp = Session.query(ABP.abp_id).filter(ABP.abp_naam.like(f'{abp_name}%')).first()
+    output = abp
+    abp = output[0]
+    return abp
+
+
+
+
+
 
 try:
     content = driver.find_elements(By.CSS_SELECTOR, ".line")
@@ -125,9 +125,12 @@ try:
             services = tryElement(element, ".bran")
             if len(services) <= 0:
                 services = tryElement(element, ".poli")
+        services = services[:4].lower()
+        
 
-        regio_id = get_or_create_region(session, msgRegion)
-        abp_id = get_or_create_abp(session, info)
+        regio_id = int(msgRegion)
+        abp_id = get_abp(services)
+        
 
         melding = Meldingen(
             regio_id=regio_id,
@@ -136,9 +139,13 @@ try:
             datum=msgDate,
             tijd=msgTime
         )
+        Session.add(melding)
+        print("Added message - Regio ID:", regio_id, "ABP ID:", abp_id, "Date:", msgDate, "Time:", msgTime)
+         
         print('.', end="")
-except:
-    # At some point, selenium just fails for this website (because the website auto updates)
+        Session.commit()
+except Exception as e:
+    print("An error occurred:", str(e))
     db = None
     if seedLocal:
         localEngine = create_engine("sqlite:///test_messages.db")
@@ -148,13 +155,7 @@ except:
     else:
         db = SessionLocal()
 
-    db.add(melding)
-    db.commit()
-
-    for message in db.query().all():
-        print(f'\t[Message]\n{message.Datum}\n{message.Tijd}\n{message.ABP}\n{message.Prioriteit}\n{message.Regio}')
-
-    db.close()
+    Session.close()
 
     print("No more messages")
     driver.close()
