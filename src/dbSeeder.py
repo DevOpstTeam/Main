@@ -9,12 +9,12 @@ https://m.livep2000.nl/ website for p2000 messages.
 import os
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from webdriver_manager.firefox import GeckoDriverManager
+# from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from sqlalchemy import create_engine
@@ -57,19 +57,20 @@ P2000Messages = list()
 
 os.environ['WDM_LOCAL'] = '1'
 os.environ['WDM_CACHE_DIR'] = '/tmp/.wdm'
-options = FirefoxOptions()
+options = webdriver.ChromeOptions()
+options.page_load_strategy = 'none'
 options.add_argument("--headless")  # Voert Firefox uit in headless modus
 options.add_argument("--disable-gpu")  # Deze optie is soms nodig voor Firefox in headless modus
 options.add_argument("--no-sandbox")  # Deze optie wordt aanbevolen voor het uitvoeren van Firefox in container-omgevingen
 options.add_argument("--disable-dev-shm-usage")
 # Firefox heeft geen direct equivalent van page_load_strategy 'none', dus die lijn wordt weggelaten
 
-# Initialiseren van de Firefox driver met de bovenstaande opties
-driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
-
+# Initialiseren van de Chrome driver
+driver = Chrome(options=options)
+ 
 # Stel een impliciete wachttijd in
 driver.implicitly_wait(5)
-
+ 
 # Ga naar de website
 driver.get("https://m.livep2000.nl/")
 
