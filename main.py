@@ -70,7 +70,7 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
         if abp != None:
             # Check which ABP ID matches the abp query value
             abpTable = db.query(ABP)
-            abpID = abpTable.filter(ABP.abp_naam == abp).first().abp_id
+            abpID = abpTable.filter(ABP.abp_naam.contains(abp)).first().abp_id
 
             # Filter the messages on the correct abp ID
             messages = messages.filter(P2000Message.abp_id == abpID)
@@ -155,9 +155,10 @@ def update_message(message_id: int, newMessage: messageCreateSchema, db = Depend
 
 @app.get("/safest")
 def get_safest_region(inverted: bool | None = None, dateStart: str | None = None, dateEnd: str | None = None,
-                      timeStart: str | None = None, timeEnd: str | None = None, db = Depends(get_db)) -> dict:
+                      timeStart: str | None = None, timeEnd: str | None = None, abp: str | None = None,
+                      db = Depends(get_db)) -> dict:
     # Get all the regions & messages
-    messages = filter_messages(dateStart=dateStart, dateEnd=dateEnd, timeStart=timeStart, timeEnd=timeEnd, db=db)
+    messages = filter_messages(dateStart=dateStart, dateEnd=dateEnd, timeStart=timeStart, timeEnd=timeEnd, abp=abp, db=db)
     regions = db.query(Regio)
 
     # Create a dictionary with every region and the amount of messages for that region
