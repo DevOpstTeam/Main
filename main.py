@@ -53,13 +53,11 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
     messages = db.query(P2000Message)
     
     try:
-        dateFormat = "%d-%M-%Y"
+        dateFormat = "%d-%m-%Y"
         if dateStart != None:
             startDate = datetime.strptime(dateStart, dateFormat)
             messages = messages.filter(P2000Message.datum >= startDate)
-        if dateStart != None:
-            startDate = datetime.strptime(dateStart, dateFormat)
-            messages = messages.filter(P2000Message.datum >= startDate)
+            print(startDate)
         if dateEnd != None:
             endDate = datetime.strptime(dateEnd, dateFormat)
             messages = messages.filter(P2000Message.datum <= endDate)
