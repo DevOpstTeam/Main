@@ -65,6 +65,9 @@ def get_abp(abp_name):
     output = abp
     abp = output[0]
     return abp
+
+
+
 def get_prio():
      return random.randint(1, 3)
 
@@ -92,7 +95,7 @@ try:
             regio_id=regio_id,
             abp_id=abp_id,
             prioriteit=prio,
-            datum=msgDate,
+            datum=datetime.strptime(msgDate,"%d-%m-%y"),
             tijd=msgTime
         )
         Session.add(melding)
