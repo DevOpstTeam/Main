@@ -164,7 +164,6 @@ def get_safest_region(inverted: bool | None = None, dateStart: str | None = None
     # Create a dictionary with every region and the amount of messages for that region
     safestRegions = {regio.regio_naam: 0 for regio in regions.all()}
     for region in regions:
-        # amountOfMessages = len(messages.filter(P2000Message.regio_id == region.regio_id).all())
         amountOfMessages = 0
         for message in messages:
             if message.regio_id == region.regio_id:
