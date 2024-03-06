@@ -1,18 +1,18 @@
 """ Pydantic schemas for the P2000 database. """
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 from datetime import date
 from typing import Optional
 
 
 #regio 
 class Regio(BaseModel):
-    regio_id: Optional[int] = None
+    regio_id: int
     regio_naam: str
 
 #abp 
 class ABP(BaseModel):
-    abp_id: Optional[int] = None
+    abp_id: int
     abp_naam: str
 
 #melding

@@ -102,9 +102,9 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     """
     db_message = P2000Message(datum=message.datum,
                               tijd=message.tijd,
-                              abp_id=message.abp_id,
+                              abp_id=message.abp.abp_id,
                               prioriteit=message.prioriteit,
-                              regio_id=message.regio_id)
+                              regio_id=message.regio.regio_id)
     db.add(db_message)
     db.commit()
     db.refresh(db_message)
