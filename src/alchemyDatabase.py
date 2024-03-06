@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
 
-SQLALCHEMY_DATABASE_URL = 'mysql://doadmin:AVNS_ct22pEFkDHsEcqTjlIM@db-mysql-ams3-58762-do-user-15578681-0.c.db.ondigitalocean.com:25060/p2000_rapportage'
+SQLALCHEMY_DATABASE_URL = 'oop'
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
