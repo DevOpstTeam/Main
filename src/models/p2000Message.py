@@ -5,19 +5,19 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from .base import Base
 
-#Regio model
+# Regio model
 class Regio(Base):
     __tablename__ = 'regio'
     regio_id = Column(Integer, primary_key=True)
     regio_naam = Column(String(255), nullable=False)
 
-#ABP model
+# ABP model
 class ABP(Base):
     __tablename__ = 'abp'
     abp_id = Column(Integer, primary_key=True)
     abp_naam = Column(String(255), nullable=False)
 
-#Meldingen model
+# Meldingen model
 class Meldingen(Base):
     __tablename__ = 'meldingen'
     melding_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -26,6 +26,6 @@ class Meldingen(Base):
     prioriteit = Column(Integer)
     datum = Column(Date)
     tijd = Column(String(255))
-    #Relaties opzetten
+    # Relaties opzetten
     regio = relationship("Regio")
     abp = relationship("ABP")
