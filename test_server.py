@@ -79,7 +79,7 @@ def get_message_id():
     else:
         return 0
 
-message_id = get_message_id()
+message_id = get_message_id() 
 
 def test_post_message():
     #get message just posted

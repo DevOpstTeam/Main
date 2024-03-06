@@ -36,8 +36,6 @@ driver.implicitly_wait(5)
 # Ga naar de website
 driver.get("https://m.livep2000.nl/")
 
-
-
 def tryElement(element, cssSelector):
     """Try to search an html element for anything that matches the CSS Selector.
 
@@ -62,8 +60,6 @@ content = driver.find_elements(By.CSS_SELECTOR, ".line")
 Session = SessionLocal()
 print(Session.query(ABP.abp_naam).all())
 
-   
-
 def get_abp(abp_name):
     abp = Session.query(ABP.abp_id).filter(ABP.abp_naam.like(f'{abp_name}%')).first()
     output = abp
@@ -71,11 +67,6 @@ def get_abp(abp_name):
     return abp
 def get_prio():
      return random.randint(1, 3)
-
-
-
-
-
 
 try:
     content = driver.find_elements(By.CSS_SELECTOR, ".line")
