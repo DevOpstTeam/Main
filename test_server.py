@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from src.models.base import Base
-from src.models.p2000Message import P2000Message as message
+from src.models.p2000Message import Meldingen as message
 from src.schemas.p2000Message import P2000MessageCreate
 
 from main import app, default_message, get_db, update_message
@@ -22,10 +22,10 @@ def get_test_db():
     db = SessionLocal()
     if db.query(message).count == 0:
         messages = [
-            message(id=1,Tijd='12:00:00',Datum='2101-05-10',Regio='Adam',ABP='Politie',Prioriteit=1,Capcode='221231'),
-            message(id=2, Tijd='14:00:00',Datum='2001-07-10',Regio='Rdam',ABP='Ambulance',Prioriteit=1,Capcode='421230'),
-            message(id=3,Tijd='15:00:00',Datum='1101-01-10',Regio='Edam',ABP='Brandweer',Prioriteit=2,Capcode='521237'),
-            message(id=4,Tijd='19:00:00',Datum='2010-06-10',Regio='Zaandam',ABP='Politie',Prioriteit=3,Capcode='921233')
+            message(Tijd='12:00:00',Datum='2101-05-10',regio_id=2,abp_id=3,Prioriteit=1),
+            message(Tijd='14:00:00',Datum='2001-07-10',regio_id=18,abp_id=1,Prioriteit=1),
+            message(Tijd='15:00:00',Datum='1101-01-10',regio_id=12,abp_id=2,Prioriteit=2),
+            message(Tijd='19:00:00',Datum='2010-06-10',regio_id=4,abp_id=3,Prioriteit=3)
         ]
         db.add_all(messages)
         db.commit()
@@ -36,16 +36,6 @@ def get_test_db():
 
 #overwrite get_db with get_test_db in app
 app.dependency_overrides[get_db] = get_test_db
-
-#create data for test message
-message_data = {
-         "Tijd": "11:33:12",
-         "Datum": "9999-02-16",
-         "Regio": "TEST",
-         "ABP": "TEST",
-         "Prioriteit": 2,
-         "Capcode": "9998999"
-    }
 
 def test_read_main():
     #get default message
@@ -63,74 +53,70 @@ def test_non_existing():
     response = client.get("/messages/-1")
     assert response.status_code == 404
 
-def test_post_message():
-    #post test message
+#create data for test message
+message_data = {
+         "tijd": "11:33:12",
+         "datum": "9999-02-16",
+         "regio_id": 1,
+         "abp_id": 2,
+         "prioriteit": 2,
+    }
+
+def get_message_id():
+    # post test message
     response = client.post("/messages/", json=message_data)
     assert response.status_code == 201
     
-    #check in database
+    # look for message in database
     db: Session = next(get_test_db())
-    posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
-    assert posted_message is not None
+    message_id = response.json()['melding_id']
+    posted_message = db.query(message).filter_by(melding_id=message_id).first()
     db.close()
+    
+    # if message found return id
+    if posted_message:
+        return message_id
+    else:
+        return 0
 
-def test_read_posted_message():    
-    #find posted message in database
-    db: Session = next(get_test_db())
-    posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
-    assert posted_message is not None
-    message_id = posted_message.id
+message_id = get_message_id()
 
+def test_post_message():
     #get message just posted
     response = client.get(f"/messages/{message_id}")
     assert response.status_code == 200
 
     #check if found message has correct data   
     assert response.json() == {
-                            "Tijd": "11:33:12",
-                            "Datum": "9999-02-16",
-                            "Regio": "TEST",
-                            "ABP": "TEST",
-                            "Prioriteit": 2,
-                            "Capcode": "9998999",
-                            "id": message_id}
-    db.close()
+                            "tijd": "11:33:12",
+                            "datum": "9999-02-16",
+                            "regio_id": 1,
+                            "abp_id": 2,
+                            "prioriteit": 2,
+                            "melding_id": message_id}
 
 def test_update_message():   
-    #find posted message in database
-    db: Session = next(get_test_db())
-    posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
-    assert posted_message is not None
-
     #modify test message
-    message_id = posted_message.id
     updated_message_data = P2000MessageCreate(
-        Tijd="11:33:12",
-        Datum="1999-02-06",
-        Regio="TEST",
-        ABP="TEST_2",
-        Prioriteit=2,
-        Capcode="9998999"
+        tijd="11:33:12",
+        datum="1999-02-06",
+        regio_id=4,
+        abp_id=2,
+        prioriteit=2,
     )
 
     #modify test message
-    updated_message =update_message(message_id=message_id, newMessage=updated_message_data, db=db)
+    db: Session = next(get_test_db())
+    updated_message = update_message(message_id=message_id, newMessage=updated_message_data, db=db)
     
     #update database 
     db: Session = next(get_test_db())
-    updated_message = db.query(message).filter_by(Capcode=updated_message_data.Capcode).first()
+    updated_message = db.query(message).filter_by(melding_id=message_id).first()
     assert updated_message is not None
-    assert updated_message.ABP == updated_message_data.ABP
-    assert updated_message.Capcode == updated_message_data.Capcode
+    assert updated_message.abp_id == updated_message_data.abp_id
     db.close()
 
 def test_delete():
-    #find posted message in database
-    db: Session = next(get_test_db())
-    posted_message = db.query(message).filter_by(Capcode=message_data["Capcode"]).first()
-    assert posted_message is not None
-    message_id = posted_message.id
-    
     #check if message was deleted
     del_response = client.delete(f"/messages/{message_id}")
     assert del_response.status_code == 200 
@@ -138,21 +124,33 @@ def test_delete():
     #make sure test message is gone
     response_deleted = client.get(f"/messages/{message_id}") 
     assert response_deleted.status_code == 404
-    db.close()
 
 def test_filter():
     #test case with all parameters
-    response = client.get("/messages/filter/?dateStart=01-01-2023&dateEnd=01-02-2023&timeStart=12:00&timeEnd=13:00&abp=test&priority=1&region=test&capcode=123")
+    response = client.get("/messages?dateStart=01-01-2024&dateEnd=01-04-2024&timeStart=12:00&timeEnd=13:00&abp=3&priority=1&region=Groningen")
     assert response.status_code == 200
 
     #test case with only dateStart parameter
-    response = client.get("/messages/filter/?dateStart=01-01-2023")
+    response = client.get("/messages?dateStart=01-01-2023")
     assert response.status_code == 200
 
     #test case with dateStart + priority
-    response = client.get("/messages/filter/?dateStart=02-01-2023&priority=2")
+    response = client.get("/messages?dateStart=02-01-2023&priority=2")
     assert response.status_code == 200
 
     #test case with invalid priority
-    response = client.get("/messages/filter/?priority=b")
+    response = client.get("/messages?priority=b")
     assert response.status_code == 422
+
+def test_safest():
+    #test case to test safest region method
+    response = client.get("/safest")
+    assert response.status_code == 200
+
+    #test with start date filter
+    response = client.get("/safest?dateStart=06-03-2024")
+    assert response.status_code == 200
+
+    #test with inversed filter
+    response = client.get("/safest?inversed=True")
+    assert response.status_code == 200
