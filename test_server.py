@@ -59,7 +59,15 @@ message_data = {
          "datum": "9999-02-16",
          "regio_id": 1,
          "abp_id": 2,
-         "prioriteit": 2,
+        #  "regio": {
+        #      "regio_id": 1,
+        #      "regio_naam": "Groningen"
+        #  },
+        #  "abp": {
+        #      "abp_id": 2,
+        #      "abp_naam": "Brandweer"
+        #  },
+         "prioriteit": 2
     }
 
 def get_message_id():
@@ -90,8 +98,10 @@ def test_post_message():
     assert response.json() == {
                             "tijd": "11:33:12",
                             "datum": "9999-02-16",
-                            "regio_id": 1,
-                            "abp_id": 2,
+                            # "regio_id": 1,
+                            # "abp_id": 2,
+                            "abp": None,
+                            "regio": None,
                             "prioriteit": 2,
                             "melding_id": message_id}
 

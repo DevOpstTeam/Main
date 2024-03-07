@@ -6,7 +6,6 @@ This script creates an API using FastAPI that will interact with a P2000 databas
 from fastapi import FastAPI, HTTPException, Depends
 from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
-from src.schemas.p2000Message import Regio as regionSchema
 from src.models.p2000Message import Meldingen as P2000Message
 from src.models.p2000Message import ABP
 from src.models.p2000Message import Regio
@@ -53,13 +52,11 @@ def filter_messages(dateStart: str | None = None, dateEnd: str | None = None, ti
     messages = db.query(P2000Message)
     
     try:
-        dateFormat = "%d-%M-%Y"
+        dateFormat = "%d-%m-%Y"
         if dateStart != None:
             startDate = datetime.strptime(dateStart, dateFormat)
             messages = messages.filter(P2000Message.datum >= startDate)
-        if dateStart != None:
-            startDate = datetime.strptime(dateStart, dateFormat)
-            messages = messages.filter(P2000Message.datum >= startDate)
+            print(startDate)
         if dateEnd != None:
             endDate = datetime.strptime(dateEnd, dateFormat)
             messages = messages.filter(P2000Message.datum <= endDate)
