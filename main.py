@@ -13,7 +13,7 @@ from src.alchemyDatabase import SessionLocal
 from datetime import datetime
 
 app = FastAPI()
-default_message = "reparatie opdracht test" #returned on "/" endpoint  
+default_message = "reparatie opdracht test!" #returned on "/" endpoint  
 
 def get_db():
     """Get a reference to the database and close the database when finished."""
