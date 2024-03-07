@@ -19,13 +19,14 @@ class ABP(BaseModel):
 class P2000MessageBase(BaseModel):
     datum: date  
     tijd: str   
-    prioriteit: Optional[int] = None  
+    prioriteit: int 
     regio: Optional[Regio] = None
     abp: Optional[ABP] = None
 
 # create message
 class P2000MessageCreate(P2000MessageBase):
-    pass
+    abp_id: int
+    regio_id: int
 
 # read message
 class P2000Message(P2000MessageBase):

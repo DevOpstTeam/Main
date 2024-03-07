@@ -6,7 +6,6 @@ This script creates an API using FastAPI that will interact with a P2000 databas
 from fastapi import FastAPI, HTTPException, Depends
 from src.schemas.p2000Message import P2000Message as messageSchema
 from src.schemas.p2000Message import P2000MessageCreate as messageCreateSchema
-from src.schemas.p2000Message import Regio as regionSchema
 from src.models.p2000Message import Meldingen as P2000Message
 from src.models.p2000Message import ABP
 from src.models.p2000Message import Regio
@@ -100,9 +99,9 @@ def create_message(message: messageCreateSchema, db=Depends(get_db)) -> messageS
     """
     db_message = P2000Message(datum=message.datum,
                               tijd=message.tijd,
-                              abp_id=message.abp.abp_id,
+                              abp_id=message.abp_id,
                               prioriteit=message.prioriteit,
-                              regio_id=message.regio.regio_id)
+                              regio_id=message.regio_id)
     db.add(db_message)
     db.commit()
     db.refresh(db_message)
